@@ -1,21 +1,21 @@
 import React from "react";
 
-const TextField = ({
-  type = "text", // Default type of input (text)
-  value = "", // Default value for the input
-  onChange, // Function to handle input change
-  placeholder = "Enter text", // Default placeholder
-  borderColor = "border-light-gray", // Default border color class
-  textColor = "text-dark-gray", // Default text color class
-    customClass = "", // Allow passing custom class names if needed
-  label, // Label for the input
-}) => {
+const TextField = ({ label, value, onChange, placeholder, name, type = "text" }) => {
   return (
-    <div className="w-full mb-4">
-      <label htmlFor="email" className=" text-gray-700 font-poppins  font-semibold mb-3 text-sm">
+    <div>
+      <label htmlFor={name} className="block text-gray-700 font-bold mb-2">
         {label}
       </label>
-      <input type={type} value={value} onChange={onChange} className={`w-full px-3 py-2 border rounded-lg outline-none font-roboto ${textColor} ${borderColor} ${customClass}`} placeholder={placeholder} required />
+      <input
+        type={type} // Make sure type is passed correctly (text, date, etc.)
+        id={name}
+        name={name}
+        value={value} // Controlled input
+        onChange={onChange} // Updating the state
+        className="w-full px-3 py-2 border rounded-lg text-dark-gray border-light-gray outline-none font-roboto"
+        placeholder={placeholder}
+        required
+      />
     </div>
   );
 };

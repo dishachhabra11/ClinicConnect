@@ -27,7 +27,7 @@ export const ClinicRegisterForm = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-semibold text-center mb-6 font-roboto ">Register your Clinic</h2>
+      <h2 className="text-3xl font-semibold text-center mb-6 font-roboto ">Enter your Clinic</h2>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         <div className="mb-4">
           <TextField value={formData.clinicName} onChange={handleChange} label={"Clinic Name"} placeholder="Enter Clinic Name" />
