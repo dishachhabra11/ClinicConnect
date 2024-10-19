@@ -5,6 +5,14 @@ const Clinic = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
   address: {
     type: String,
     required: true,
@@ -14,21 +22,27 @@ const Clinic = new mongoose.Schema({
     required: true,
   },
   pincode: {
-    type: String,
+    type: Number,
     required: true,
   },
   state: {
     type: String,
     required: true,
   },
-  doctors: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-  patients: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
+  doctors: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
+      required: false,
+    },
+  ],
+  patients: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Patient",
+      required: false,
+    },
+  ],
   openTimeSlots: [
     {
       startTime: {
@@ -39,11 +53,12 @@ const Clinic = new mongoose.Schema({
         type: String, // e.g., "05:00 PM"
         required: true,
       },
+      _id: false,
     },
   ],
   openDays: {
-    type: Array,
-    enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    type: [String],
+    enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
     required: true,
   },
 });

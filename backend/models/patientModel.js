@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import ClinicVisit from "./clinicsVisitedModel.js"; // Correct import for the ClinicVisit model
 
-const Patient = new mongoose.Schema({
+const PatientSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -30,13 +31,19 @@ const Patient = new mongoose.Schema({
     type: String,
     required: true,
   },
-  clinicsVisited: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-  prescriptions: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
+  // Define the array with the schema reference
+  clinicsVisited: [
+    {
+      type: ClinicVisit.schema, // Referencing the schema, not the model itself
+      required: false, // Optional field
+    },
+  ], // Includes clinic visits, symptoms, registration time, and priority number
+  prescriptions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Prescription",
+    },
+  ],
 });
-export default mongoose.model("Patient", Patient);
+
+export default mongoose.model("Patient", PatientSchema);
