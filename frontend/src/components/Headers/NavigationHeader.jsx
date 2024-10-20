@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { Header } from "./Header";
+import Avatar from "../Avatar";
+import Button from "../Buttons/Button";
 
 const NavigationHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,18 +15,14 @@ const NavigationHeader = () => {
     <div>
       <Header>
         <nav className="hidden md:flex space-x-4">
-          <a href="#" className="text-gray-700 hover:text-gray-900">
-            Dashboard
-          </a>
-          <a href="#" className="text-gray-700 hover:text-gray-900">
-            Queue Management
-          </a>
-          <a href="#" className="text-gray-700 hover:text-gray-900">
+          <a href="#" className="text-black flex flex-col justify-center hover:text-primary hover:underline ">
             Check Availability
           </a>
-          <a href="#" className="text-gray-700 hover:text-gray-900">
-            Queue Management
-          </a>
+          {/* <Button bgColor="bg-primary">
+            {" "}
+            <p className="text-white">Check Availability</p>
+          </Button> */}
+          <Avatar />
         </nav>
         <div className="md:hidden relative">
           <button className="text-gray-700 hover:text-gray-900" onClick={toggleMenu}>
