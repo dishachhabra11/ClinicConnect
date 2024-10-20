@@ -5,6 +5,10 @@ const Clinic = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     required: true,
@@ -16,6 +20,16 @@ const Clinic = new mongoose.Schema({
   address: {
     type: String,
     required: true,
+  },
+  priceRange: {
+    low: {
+      type: Number,
+      required: true,
+    },
+    high: {
+      type: Number,
+      required: true,
+    },
   },
   city: {
     type: String,
