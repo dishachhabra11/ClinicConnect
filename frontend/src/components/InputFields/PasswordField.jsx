@@ -12,9 +12,9 @@ const PasswordField = ({
   return (
     <div className="w-full mb-4">
       <label htmlFor="email" className=" text-gray-700 font-poppins  font-semibold mb-3 text-sm">
-        {label}
+        Password
       </label>
-      <input type="password" value={value} onChange={onChange} className={`w-full px-3 py-2 border rounded-lg outline-none font-roboto ${textColor} ${borderColor} ${customClass}`} placeholder={placeholder} required />
+      <input type="password" name="password" value={value} onChange={onChange} className={`w-full px-3  border rounded-lg sm:py-1 py-1 text-sm sm:text-lg outline-none font-roboto ${textColor} ${borderColor} ${customClass}`} placeholder={placeholder} required />
     </div>
   );
 };

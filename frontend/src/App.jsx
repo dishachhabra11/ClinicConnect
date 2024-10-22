@@ -10,6 +10,8 @@ import PatientSignupForm from "./components/Forms/PatientSignupForm";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SearchedClinic from "./Pages/SearchedClinic";
 import ClinicPage from "./Pages/ClinicPage";
+import QueuePage from "./Pages/QueuePage";
+import PatientSignInPage from "./Pages/PatientSignInPage";
 
 function App() {
   return (
@@ -20,9 +22,10 @@ function App() {
           <Route path="/clinics" element={<SearchedClinic />} />
           <Route path="/clinic/register" element={<ClinicRegisterForm />} />
           <Route path="/clinic/signup" element={<ClinicSignupForm />} />
-          <Route path="/patient/signin" element={<PatientSigninForm />} />
+          <Route path="/patient/signin" element={<PatientSignInPage/>} />
           <Route path="/patient/signup" element={<PatientSignupForm />} />
-          <Route path="/clinic" element={<ClinicPage/>} />
+          <Route path="/clinic" element={<ClinicPage />} />
+          <Route path="/queue" element={<QueuePage/>}/>
         </Routes>
       </Router>
     </>

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import EmailField from "../InputFields/EmailField";
 import TextField from "../InputFields/TextField";
 import PasswordField from "../InputFields/PasswordField";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 const PatientSigninForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
   });
@@ -18,19 +19,27 @@ const PatientSigninForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
+
     console.log(formData);
+    try {
+      const response = await axios.post("http://localhost:4000/api/patient/signin-patient", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("login successful", response.data.token);
+      Cookies.set("clinicConnectToken", response.data.token);
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h2 className="text-3xl font-semibold text-center mb-6 font-roboto">Log in</h2>
+      <h2 className="sm:text-2xl text-lg font-semibold text-center mb-6 font-roboto">Log in</h2>
       <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
-        {/* Name */}
-        <TextField value={formData.name} onChange={handleChange} label="Name" placeholder="Enter your name" name="name" />
-
         {/* Email */}
         <EmailField value={formData.email} onChange={handleChange} label="Email" placeholder="Enter your email" name="email" />
 
@@ -38,7 +47,7 @@ const PatientSigninForm = () => {
         <PasswordField value={formData.password} onChange={handleChange} label="Password" placeholder="Enter your password" name="password" />
 
         {/* Submit Button */}
-        <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-all">
+        <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-all" onClick={handleSubmit}>
           Sign In
         </button>
       </form>

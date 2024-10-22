@@ -11,9 +11,9 @@ const EmailField = ({
   return (
     <div className="w-full mb-4">
       <label htmlFor="email" className=" text-gray-700 font-poppins  font-semibold mb-3 text-sm">
-       Email
+        Email
       </label>
-      <input type="email" name="email" value={value} onChange={onChange} className={`w-full px-3 py-2 border rounded-lg outline-none font-roboto ${textColor} ${borderColor} ${customClass}`} placeholder={placeholder} required />
+      <input type="email" name="email" value={value} onChange={onChange} className={`w-full px-3 border rounded-lg outline-none sm:py-1 py-1 text-sm sm:text-lg font-roboto ${textColor} ${borderColor} ${customClass}`} placeholder={placeholder} required />
     </div>
   );
 };

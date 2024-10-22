@@ -12,7 +12,7 @@ const TextField = ({ label, value, onChange, placeholder, name, type = "text" })
         name={name}
         value={value} // Controlled input
         onChange={onChange} // Updating the state
-        className="w-full px-3 py-2 border rounded-lg text-dark-gray border-light-gray outline-none font-roboto"
+        className="w-full px-3 sm:py-1 py-1 text-sm sm:text-lg border rounded-lg text-dark-gray border-light-gray outline-none font-roboto "
         placeholder={placeholder}
         required
       />

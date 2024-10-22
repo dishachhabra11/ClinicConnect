@@ -13,9 +13,9 @@ function ClinicPage() {
   return (
     <div>
       <NavigationHeader />
-      <div className="p-4 bg-background flex">
-        <div className="bg-white flex-2 w-1/3 h-[400px] p-6 overflow-hidden">
-          <div className="h-full ">
+      <div className="p-4 bg-background flex sm:flex-row flex-col">
+        <div className="bg-white flex-2 sm:w-1/3 h-[200px] sm:h-[400px] sm:p-6 overflow-hidden">
+          <div className="h-full">
             <Carousel images={images} />
           </div>
         </div>
@@ -42,13 +42,17 @@ function ClinicPage() {
               <p className="font-light font-inter text-sm text-slate-800 inline-flex">General Physician</p>
             </div>
           </div>
-          <div className="flex gap-3 my-2">
-            <Button bgColor="bg-primary" borderColor="border-white">
-              <p className="text-white ">Enter queue now !!</p>
-            </Button>
-            <Button bgColor="bg-white" borderColor="border-primary">
-              <p className="text-primary">Book Appointment</p>
-            </Button>
+          <div className="flex gap-3 my-2 sm:w-[50%]">
+            <div className="flex-grow min-w-0">
+              <Button bgColor="bg-primary" borderColor="border-white" className="w-full">
+                <p className="text-white text-xs sm:text-md">Enter queue now !!</p>
+              </Button>
+            </div>
+            <div className="flex-grow min-w-0">
+              <Button bgColor="bg-white" borderColor="border-primary" className="w-full">
+                <p className="text-primary text-xs sm:text-md">Book Appointment</p>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
