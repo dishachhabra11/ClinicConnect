@@ -11,6 +11,10 @@ const PatientSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  password: {
+    type: String,
+    required:true,
+  },
   mobileNo: {
     type: String,
     required: true,
@@ -34,16 +38,17 @@ const PatientSchema = new mongoose.Schema({
   // Define the array with the schema reference
   clinicsVisited: [
     {
-      type: ClinicVisit.schema, // Referencing the schema, not the model itself
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ClinicVisit",// Referencing the schema, not the model itself
       required: false, // Optional field
     },
   ], // Includes clinic visits, symptoms, registration time, and priority number
-  prescriptions: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Prescription",
-    },
-  ],
+  // prescriptions: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Prescription",
+  //   },
+  // ],
 });
 
 export default mongoose.model("Patient", PatientSchema);
