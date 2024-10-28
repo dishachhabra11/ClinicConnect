@@ -1,5 +1,6 @@
 import Clinic from "../models/clinicModel.js";
 import bycrpt from "bcryptjs";
+import Queue from "../models/queueModel.js";
 
 // Create a new clinic
 export const createClinic = async (req, res) => {
@@ -22,7 +23,14 @@ export const createClinic = async (req, res) => {
     });
 
     await clinic.save();
-    res.status(201).json({ message: "Clinic created successfully", clinic });
+    const queue = new Queue({
+      clinicId: clinic._id,
+      patients: [],
+    });
+    clinic.queue = queue._id;
+    await queue.save();
+    await clinic.save();
+    res.status(201).json({ message: "Clinic created successfully", clinic, queue });
   } catch (error) {
     res.status(500).json({ message: "Error creating clinic", error });
   }

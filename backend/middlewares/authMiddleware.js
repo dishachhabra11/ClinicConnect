@@ -1,21 +1,28 @@
-import patientModel from "../models/patientModel";
+import jwt from "jsonwebtoken";
+import { unprotectedRoutes } from "../utils/unprotectedRoutes.js";
 
-const auth = async (req, res, next) => {
+export const auth = async (req, res, next) => {
   try {
-    const id = req.user._id;
-    if (!id) {
+    console.log(req.path);
+    if (unprotectedRoutes.includes(req.path)) {
+      return next();
+    }
+    let token = "";
+    token = req.cookies.clinicConnect;
+    console.log("token", token);
+    if (token==undefined || token=="") {
       return res.status(401).json({
         message: "your are not authorized",
       });
     }
-    const patient = await patientModel.findById(id);
-    if (!patient) {
+    const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (!verifyToken) {
       return res.status(401).json({
-        message: "your are not authorized",
+        message: "your are not authorized, token expired",
       });
-    } else {
-      next();
     }
+    req.userId = verifyToken.id;
+    next();
   } catch (error) {
     return res.status(501).json(error.message);
   }

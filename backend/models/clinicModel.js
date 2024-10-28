@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Queue from "./queueModel.js";
 
 const Clinic = new mongoose.Schema({
   name: {
@@ -24,11 +25,11 @@ const Clinic = new mongoose.Schema({
   priceRange: {
     low: {
       type: Number,
-      required: true,
+      required: false,
     },
     high: {
       type: Number,
-      required: true,
+      required: false,
     },
   },
   city: {
@@ -42,6 +43,11 @@ const Clinic = new mongoose.Schema({
   state: {
     type: String,
     required: true,
+  },
+  queue: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Queue",
+    required: false,
   },
   doctors: [
     {

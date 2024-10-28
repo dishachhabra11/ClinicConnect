@@ -2,7 +2,7 @@ import express from "express";
 import { createClinic, updateClinic, deleteClinic, getAllClinics, getClinicById, searchClinics } from "../controllers/clinicController.js";
 const router = express.Router();
 
-router.post("/", createClinic);
+router.post("/createClinic", createClinic);
 router.get("/filter", searchClinics);// Create a clinic
 router.put("/:id", updateClinic); // Update clinic by ID
 router.delete("/:id", deleteClinic); // Delete clinic by ID
