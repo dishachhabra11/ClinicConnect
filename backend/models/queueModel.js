@@ -12,6 +12,10 @@ const queueSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  currentToken: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

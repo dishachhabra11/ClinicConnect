@@ -35,11 +35,12 @@ const port = process.env.PORT || 4000;
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // Listen for the "message" event
+  // Listen for the "join clinic" event
   socket.on("joinClinic", (clinicId) => {
     socket.join(clinicId);
-    console.log("user joined clinic ", clinicId);
+    console.log("user joined clinic of id", clinicId);
   });
+
 
 });
 

@@ -78,10 +78,11 @@ export const signinPatient = async (req, res) => {
     // Create JWT
     const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET, { expiresIn: "15d" });
     res.cookie("clinicConnect", token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: false,
       sameSite: "None",
       maxAge: 15 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     // Send the token back to the client

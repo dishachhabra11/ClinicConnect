@@ -5,7 +5,8 @@ const maxQueueLength = 15;
 import patientModel from "../models/patientModel.js";
 
 export const addUserToQueue = async (req, res, io) => {
-  const { clinicId, userId, symptoms } = req.body;
+  const { clinicId, symptoms } = req.body;
+  const userId = req.user._id;
 
   // Input validation
   if (!clinicId || !userId) {
@@ -29,13 +30,10 @@ export const addUserToQueue = async (req, res, io) => {
       return res.status(400).json({ message: "Queue is full" });
     }
     for (let i = 0; i < queue.patients.length; i++) {
-      console.log(queue.patients[i].userId.toString());
-      console.log("userid", userId);
-      if (queue.patients[i].userId.toString() === userId) {
+      if (queue.patients[i].userId.toString() === userId.toString()) {
         return res.status(400).json({ message: "User already in queue" });
       }
     }
-
     // Increment token number
     const tokenNumber = (queue.lastToken || 0) + 1;
 
@@ -54,7 +52,7 @@ export const addUserToQueue = async (req, res, io) => {
     // Emit the new patient to the clinic
     io.to(clinicId).emit("newPatient", newUser);
 
-    return res.status(201).json({ message: "User added to queue successfully", newUser });
+    return res.status(201).json({ message: "User added to queue successfully", newUser, currentToken: queue.currentToken });
   } catch (error) {
     console.error("Error adding user to queue:", error); // Log the error for debugging
     return res.status(500).json({ message: "Internal server error" });
@@ -65,13 +63,12 @@ export const dequeueUser = async (req, res, io) => {
   const { clinicId } = req.body;
 
   try {
-    const clinic = await clinicModel.findById(clinicId );
+    const clinic = await clinicModel.findById(clinicId);
     if (!clinic) {
       return res.status(404).json({ message: "Clinic not found" });
     }
     const queueId = clinic.queue;
     const queue = await Queue.findById(queueId);
-
 
     if (!queue || queue.patients.length === 0) {
       return res.status(404).json({ message: "No users in queue" });
@@ -79,10 +76,11 @@ export const dequeueUser = async (req, res, io) => {
 
     // Dequeue the first user
     const dequeuedUser = queue.patients.shift(); // Remove the first user from the queue
+    dequeuedUser.status = "completed";
+    await dequeuedUser.save();
+    queue.currentToken = dequeuedUser.tokenNumber;
 
     await queue.save(); // Save changes to the queue
-
-
 
     // Emit the current token number to all clients
     io.to(clinicId).emit("userDequeued", {
