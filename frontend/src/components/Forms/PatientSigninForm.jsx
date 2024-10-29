@@ -4,12 +4,14 @@ import TextField from "../InputFields/TextField";
 import PasswordField from "../InputFields/PasswordField";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const PatientSigninForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,9 +30,19 @@ const PatientSigninForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials:true,
       });
+      if (!response.data.token) { 
+        alert("login unsuccessful");
+      }
+      else {
+        Cookies.set("clinicConnect", response.data.token, {
+          expires: 15,
+          sameSite: "strict",
+        });
+        navigate("/");
+      }
       console.log("login successful", response.data.token);
-      Cookies.set("clinicConnectToken", response.data.token);
     } catch (error) {
       console.log(error.response.data.message);
     }

@@ -51,7 +51,12 @@ const PatientSignupForm = () => {
       );
       // Handle success (e.g., display a success message or redirect)
       console.log("Patient created successfully:", response.data);
-      Cookies.set("token", response.data.token, { expires: 15 });
+      Cookies.set("token", response.data.token, {
+        expires: 7, // Optional, set expiry in days
+        secure: process.env.NODE_ENV === "production", // Only use secure flag in production
+        sameSite: "Lax", // Ensures cookies are sent in cross-site requests
+        path: "/",
+      });
       navigate("/");
     } catch (error) {
       // Handle error (e.g., display an error message)
