@@ -12,6 +12,7 @@ import SearchedClinic from "./Pages/SearchedClinic";
 import ClinicPage from "./Pages/ClinicPage";
 import QueuePage from "./Pages/QueuePage";
 import PatientSignInPage from "./Pages/PatientSignInPage";
+import CategorySelect from "./Pages/CategorySelect";
 
 function App() {
   return (
@@ -24,8 +25,9 @@ function App() {
           <Route path="/clinic/signup" element={<ClinicSignupForm />} />
           <Route path="/patient/signin" element={<PatientSignInPage/>} />
           <Route path="/patient/signup" element={<PatientSignupForm />} />
-          <Route path="/clinic" element={<ClinicPage />} />
-          <Route path="/queue" element={<QueuePage/>}/>
+          <Route path="/clinic/:id" element={<ClinicPage />} />
+          <Route path="/queue/:id" element={<QueuePage />} />
+          <Route path="/select" element={<CategorySelect/>} />
         </Routes>
       </Router>
     </>

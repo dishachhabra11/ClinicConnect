@@ -1,11 +1,42 @@
-import React from "react";
-import { Header } from "../components/Headers/Header";
+import React, { useEffect, useState } from "react";
 import landingImage from "../assets/images/landing.jpg";
-import doctorImage from "../assets/images/doctor.png";
-import patientImage from "../assets/images/patient.png";
 import SearchBar from "../components/SearchBar";
 import LandingPageHeader from "../components/Headers/LandingPageHeader";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const debounce = (func, delay) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
 const LandingPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [relatedClinics, setRelatedClinics] = useState([]);
+  const navigate = useNavigate();
+  const callSearchApi = async (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/filter?query=${e.target.value}`, {
+        withCredentials: true,
+      });
+      setRelatedClinics(res.data.clinics);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(res);
+  };
+  const debouncedSearch = debounce(callSearchApi, 1000);
+  const searchClinics = (e) => {
+    setSearchQuery(e.target.value);
+    debouncedSearch(e);
+  };
   return (
     <div>
       <LandingPageHeader />
@@ -15,24 +46,20 @@ const LandingPage = () => {
           <div className="relative flex flex-col  w-full h-full p-5 bg-blue-100 bg-opacity-60">
             <h1 className="text-5xl font-bold text-black mt-10 text-center">Delivering high-quality healthcare</h1>
             <p className="text-xl text-gray-200 font-semibold text-center mt-4">Find the right clinic for you..</p>
-            {/* <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 justify-center gap-10 mt-10">
-              <div className="w-40 h-40 md:w-50 md:h-50 bg-slate-50 rounded-full flex items-center justify-center cursor-pointer transform transition-transform duration-200 ease-in-out hover:scale-105 active:translate-y-1 shadow-2xl">
-                <img
-                  src={patientImage}
-                  alt="Description of image 1"
-                  className="object-contain w-full h-full rounded-full" // Ensure the image is also circular
-                />
-              </div>
-              <div className=" w-40 h-40 md:w-50 md:h-50 bg-white rounded-full flex items-center justify-center cursor-pointer transform transition-transform duration-200 ease-in-out hover:scale-105 active:translate-y-1 shadow-2xl">
-                <img
-                  src={doctorImage}
-                  alt="Description of image 2"
-                  className="object-contain w-full h-full rounded-full" // Ensure the image is also circular
-                />
-              </div>
-            </div> */}
+
             <div className="w-[60%] mt-5 mx-auto">
-              <SearchBar placeholder="Search by clinics or hospitals" />
+              <SearchBar placeholder="Search by clinics or hospitals" searchQuery={searchQuery} onChange={searchClinics} />
+              {relatedClinics.length > 0 && (
+                <div className="w-full bg-white rounded-lg h-auto max-h-[150px] overflow-y-scroll">
+                  {relatedClinics.map((clinic) => (
+                    <div className="w-full h-[50px] flex justify-between items-center px-3 py-[2px] shadow cursor-pointer" onClick={() => {
+                      navigate("/clinic/" + clinic._id);
+                    }}>
+                      <p className="text-md font-normal text-gray-700">{clinic.name}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
