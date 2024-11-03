@@ -5,16 +5,40 @@ import { io } from "socket.io-client";
 import { useParams } from "react-router-dom";
 import CategorySelect from "./CategorySelect";
 import Button from "../components/Buttons/Button";
+import { useLocation } from "react-router-dom";
 
 function QueuePage() {
   const [token, setToken] = useState();
   const [currentToken, setCurrentToken] = useState();
-  const [yourToken, setYourToken] = useState();
+
   const clinicId = useParams().id;
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
   const [overlapping, setOverlapping] = useState(false);
+  const location = useLocation();
+  const [clinic, setClinic] = useState(location.state.clinic);
+  const [patientInqueue, setPatientInqueue] = useState(false);
+  
 
+  const getQueue = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/getQueue/${clinic.queue}`, { withCredentials: true });
+
+      setCurrentToken(res.data.queue.currentToken);
+      setPatientInqueue(res.data.isPresent);
+
+      if (res.data.isPresent != false) {
+        setToken(res.data.isPresent.tokenNumber);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getQueue();
+  }, []);
+
+  console.log("patients in the queue", patientInqueue);
   useEffect(() => {
     const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
       withCredentials: true,
@@ -29,7 +53,6 @@ function QueuePage() {
       setCurrentToken(data.tokenNumber); // Update the current token in state
     });
 
-    // Cleanup socket connection on component unmount
     return () => {
       newSocket.disconnect();
     };
@@ -38,6 +61,7 @@ function QueuePage() {
     try {
       console.log("submitandEnterQueue");
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/queue/add`, { clinicId }, { withCredentials: true });
+      console.log("data after clinking enetr queue", res.data);
       setToken(res.data.newUser.tokenNumber);
       setCurrentToken(res.data.currentToken);
       setOverlapping(false);
@@ -62,15 +86,15 @@ function QueuePage() {
       ) : (
         <div>
           <NavigationHeader />
-          <div className="container mx-auto p-4 sm:max-w-[70%]">
-            <h2 className="text-xl font-bold text-center mb-4">Queue Status</h2>
+          <div className="container mx-auto p-4 sm:max-w-[70%] flex justify-center flex-col items-center gap-4">
+            <h2 className="text-xl font-bold text-center mb-4 font-inter">Queue Status</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <TokenCard heading="Current Token Number" number={currentToken} />
-              <TokenCard heading="Your Token Number" number={yourToken} />
-              <TokenCard heading="Your Position in Queue" number={yourToken - currentToken} />
+              <TokenCard heading="Your Token Number" number={token} />
+              <TokenCard heading="Your Position in Queue" number={token - currentToken >= 0 ? token - currentToken : ""} />
             </div>
-            <div onClick={enterQueue} className="max-w-[150px]">
-              <Button bgColor="bg-primary">Enter queue</Button>
+            <div onClick={patientInqueue==false || !(token >0) ? enterQueue:""} className={`max-w-[250px] flex justify-center mt-2`}>
+              <Button bgColor="bg-primary">{patientInqueue === false ? "Enter queue" : "you are already in Queue"}</Button>
             </div>
           </div>
         </div>
@@ -84,8 +108,8 @@ export default QueuePage;
 const TokenCard = ({ heading, number }) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between items-center">
-      <h3 className="text-lg font-semibold">{heading}</h3>
-      <span className="text-3xl font-bold">{number}</span>
+      <h3 className="text-lg font-semibold font-inter">{heading}</h3>
+      <span className="text-[50px] font-bold">{number}</span>
     </div>
   );
 };

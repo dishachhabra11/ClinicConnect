@@ -10,8 +10,10 @@ function LandingPageHeader() {
           <a href="example.com">Register your Clinic?</a>
         </p>
 
-        <Button bgColor="bg-primary">Login</Button>
-        <Button bgColor="bg-gray">Enter</Button>
+        <div className="flex gap-2">
+          <Button bgColor="bg-primary">Login</Button>
+          <Button bgColor="bg-gray">Enter</Button>
+        </div>
       </Header>
     </div>
   );

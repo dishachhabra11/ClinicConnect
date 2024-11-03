@@ -27,6 +27,7 @@ const LandingPage = () => {
         withCredentials: true,
       });
       setRelatedClinics(res.data.clinics);
+      return res.data.clinics;
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +48,13 @@ const LandingPage = () => {
             <h1 className="text-5xl font-bold text-black mt-10 text-center">Delivering high-quality healthcare</h1>
             <p className="text-xl text-gray-200 font-semibold text-center mt-4">Find the right clinic for you..</p>
 
-            <div className="w-[60%] mt-5 mx-auto">
+            <div className="w-[60%] mt-5 mx-auto" onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                console.log("Enter pressed");
+                const clinics = relatedClinics;
+                navigate("/clinics", { state: { clinics } });
+              }
+            }}>
               <SearchBar placeholder="Search by clinics or hospitals" searchQuery={searchQuery} onChange={searchClinics} />
               {relatedClinics.length > 0 && (
                 <div className="w-full bg-white rounded-lg h-auto max-h-[150px] overflow-y-scroll">

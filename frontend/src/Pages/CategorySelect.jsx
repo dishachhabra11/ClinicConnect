@@ -14,7 +14,7 @@ function CategorySelect({onSubmit}) {
 
   return (
     <>
-      {/* <NavigationHeader /> */}
+      <NavigationHeader />
       <div className="max-w-lg mx-auto p-4">
         <h3 className="text-lg font-semibold mb-4">Select your symptoms</h3>
         <div className="flex flex-wrap gap-3">
