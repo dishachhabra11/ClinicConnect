@@ -1,5 +1,6 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config("/.env");
+import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
 import clinicRouter from "./routes/clinicRouter.js";
@@ -10,6 +11,7 @@ import http from "http";
 import { Server } from "socket.io";
 import queueRouter from "./routes/queueRouter.js";
 
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -19,8 +21,9 @@ const io = new Server(server, {
   },
 });
 
-dotenv.config();
+
 connectDB();
+
 // const app = express();
 app.use(express.json());
 app.use(

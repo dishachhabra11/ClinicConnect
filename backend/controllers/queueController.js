@@ -3,6 +3,7 @@ import UserInQueue from "../models/userInQueue.js";
 import clinicModel from "../models/clinicModel.js";
 const maxQueueLength = 15;
 import patientModel from "../models/patientModel.js";
+import clinicsVisitedModel from "../models/clinicsVisitedModel.js";
 
 export const addUserToQueue = async (req, res, io) => {
   const { clinicId, symptoms } = req.body;
@@ -81,6 +82,15 @@ export const dequeueUser = async (req, res, io) => {
     queue.currentToken = dequeuedUser.tokenNumber;
 
     await queue.save(); // Save changes to the queue
+
+    const clinicVisited = new clinicsVisitedModel({
+      clinicId: clinicId,
+      symptoms: dequeuedUser.symptoms || "Not specified",
+      status: "completed",
+    });
+    const patient = await patientModel.findById(dequeuedUser.userId);
+    patient.clinicsVisited.push(clinicVisited);
+    await patient.save();
 
     // Emit the current token number to all clients
     io.to(clinicId).emit("userDequeued", {

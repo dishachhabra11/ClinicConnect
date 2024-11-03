@@ -37,7 +37,10 @@ export const createPatient = async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign(
-      { id: savedPatient._id },
+      {
+        id: savedPatient._id,
+        name: savedPatient.name,
+      },
       process.env.JWT_SECRET, // Make sure to set this in your environment variables
       { expiresIn: "15d" } // Token expires in 1 hour
     );
@@ -76,7 +79,7 @@ export const signinPatient = async (req, res) => {
     }
 
     // Create JWT
-    const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET, { expiresIn: "15d" });
+    const token = jwt.sign({ id: patient._id, name: patient.name }, process.env.JWT_SECRET, { expiresIn: "15d" });
     res.cookie("clinicConnect", token, {
       httpOnly: true,
       secure: false,

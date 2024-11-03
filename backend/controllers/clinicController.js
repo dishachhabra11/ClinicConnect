@@ -1,14 +1,20 @@
 import Clinic from "../models/clinicModel.js";
 import bycrpt from "bcryptjs";
 import Queue from "../models/queueModel.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
-// Create a new clinic
 export const createClinic = async (req, res) => {
   const { name, email, password, address, city, pincode, state, openTimeSlots, openDays } = req.body;
 
   try {
-    // Hash the password before saving
-    const hashedPassword = await bycrpt.hash(password, 10);
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      console.log(req.files);
+      imageUrls = req.files.map((file) => file.path);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const clinic = new Clinic({
       name,
@@ -19,20 +25,59 @@ export const createClinic = async (req, res) => {
       pincode,
       state: state.toLowerCase(),
       openTimeSlots,
-      openDays: openDays.map((day) => day.toLowerCase()),
+      openDays,
+      image: imageUrls || [],
     });
 
     await clinic.save();
+
     const queue = new Queue({
       clinicId: clinic._id,
       patients: [],
     });
+
     clinic.queue = queue._id;
     await queue.save();
     await clinic.save();
-    res.status(201).json({ message: "Clinic created successfully", clinic, queue });
+
+    // Generate JWT token
+    const token = jwt.sign({ id: clinic._id, role: "clinic" }, process.env.JWT_SECRET, { expiresIn: "15d" });
+
+    // Set cookie
+    res.cookie("clinicToken", token, { httpOnly: true, secure: false, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
+
+    res.status(201).json({ message: "Clinic created successfully", clinic, queue, token });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Error creating clinic", error });
+  }
+};
+export const clinicSignIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find the clinic by email
+    const clinic = await Clinic.findOne({ email });
+    if (!clinic) {
+      return res.status(404).json({ message: "Clinic not found" });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, clinic.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: clinic._id, role: "clinic" }, process.env.JWT_SECRET, { expiresIn: "15d" });
+
+    // Set cookie
+    res.cookie("clinicToken", token, { httpOnly: true, secure: true, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
+
+    res.status(200).json({ message: "Clinic signed in successfully", clinic });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error signing in clinic", error });
   }
 };
 
@@ -54,7 +99,6 @@ export const updateClinic = async (req, res) => {
     if (!clinic) {
       return res.status(404).json({ message: "Clinic not found" });
     }
-
     res.json({ message: "Clinic updated successfully", clinic });
   } catch (error) {
     res.status(500).json({ message: "Error updating clinic", error });
@@ -147,5 +191,25 @@ export const searchClinics = async (req, res) => {
 
     // General error handling for other issues
     return res.status(500).json({ message: "Failed to retrieve clinics", error });
+  }
+};
+
+export const getQueueByqueueIdandStatus = async (req, res) => {
+  try {
+    const { queueId } = req.params;
+    const queue = await Queue.findById(queueId);
+    if (!queue) {
+      return res.status(404).json({ message: "Queue not found" });
+    }
+    let isPresent = false;
+    for (let i = 0; i < queue.patients.length; i++) {
+      if (queue.patients[i].userId == req.user.id) {
+        isPresent = queue.patients[i];
+        break;
+      }
+    }
+    res.status(200).json({ queue, isPresent });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to retrieve queue", error });
   }
 };

@@ -10,7 +10,7 @@ const queueSchema = new mongoose.Schema({
   patients: [UserInQueue.schema],
   lastToken: {
     type: Number,
-    default: 0,
+    default: 1,
   },
   currentToken: {
     type: Number,

@@ -12,7 +12,8 @@ const userInQueueSchema = new mongoose.Schema({
     required: true,
   },
   symptoms: {
-    type: String,
+    type: [String],
+    enum: ["Fever", "Cough", "Cold", "Headache", "Body Pain", "Fatigue", "Shortness of Breath", "Nausea", "Vomiting", "Diarrhea", "Muscle Pain", "Sore Throat", "Dizziness", "Chest Pain", "Loss of Appetite", "Abdominal Pain", "Chills", "Joint Pain", "Swelling", "Rash", "Constipation", "Heart Palpitations", "Back Pain", "Numbness", "Excessive Sweating", "Blurred Vision", "Frequent Urination", "Skin Itching", "Dry Mouth", "Ear Pain", "Weight Loss"],
     required: false,
   },
   status: {

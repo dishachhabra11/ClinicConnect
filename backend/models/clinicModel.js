@@ -67,11 +67,11 @@ const Clinic = new mongoose.Schema({
     {
       startTime: {
         type: String, // e.g., "09:00 AM"
-        required: true,
+        required: false,
       },
       endTime: {
         type: String, // e.g., "05:00 PM"
-        required: true,
+        required: false,
       },
       _id: false,
     },
@@ -79,8 +79,15 @@ const Clinic = new mongoose.Schema({
   openDays: {
     type: [String],
     enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
-    required: true,
+    required: false,
   },
+  image: [
+    {
+      type: String,
+      required: false,
+      default: "https://via.placeholder.com/150",
+    },
+  ],
 });
 
 export default mongoose.model("Clinic", Clinic);
