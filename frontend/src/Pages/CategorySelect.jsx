@@ -5,11 +5,19 @@ import Button from "../components/Buttons/Button";
 
 const categories = ["Fever", "Cough", "Cold", "Headache", "Body Pain", "Fatigue", "Shortness of Breath", "Nausea", "Vomiting", "Diarrhea", "Muscle Pain", "Sore Throat", "Dizziness", "Chest Pain", "Loss of Appetite", "Abdominal Pain", "Chills", "Joint Pain", "Swelling", "Rash", "Constipation", "Heart Palpitations", "Back Pain", "Numbness", "Excessive Sweating", "Blurred Vision", "Frequent Urination", "Skin Itching", "Dry Mouth", "Ear Pain", "Weight Loss"];
 
-function CategorySelect({onSubmit}) {
+function CategorySelect({ onSubmit, onSymptomSelect }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const handleCategoryClick = (category) => {
-    setSelectedCategories((prevSelected) => (prevSelected.includes(category) ? prevSelected.filter((item) => item !== category) : [...prevSelected, category]));
+    setSelectedCategories((prevSelected) => {
+      const updatedSelected = prevSelected.includes(category)
+        ? prevSelected.filter((item) => item !== category)
+        : [...prevSelected, category];
+      
+      // Call the prop to update the selected symptoms in QueuePage
+      onSymptomSelect(updatedSelected);
+      return updatedSelected;
+    });
   };
 
   return (
@@ -31,7 +39,7 @@ function CategorySelect({onSubmit}) {
         </div>
         <p className="mt-4 text-sm text-gray-500">{selectedCategories.length} symptoms selected</p>
         <div className="mt-2 sm:max-w-[200px]" onClick={onSubmit}>
-          <Button bgColor="bg-primary" >Submit</Button>
+          <Button bgColor="bg-primary">Submit</Button>
         </div>
       </div>
     </>
@@ -39,3 +47,4 @@ function CategorySelect({onSubmit}) {
 }
 
 export default CategorySelect;
+

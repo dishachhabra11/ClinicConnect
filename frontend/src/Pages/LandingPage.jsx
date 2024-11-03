@@ -33,10 +33,10 @@ const LandingPage = () => {
     }
     console.log(res);
   };
-  const debouncedSearch = debounce(callSearchApi, 1000);
+  const debouncedSearch = debounce(callSearchApi, 500);
   const searchClinics = (e) => {
     setSearchQuery(e.target.value);
-    debouncedSearch(e);
+    callSearchApi(e);
   };
   return (
     <div>
