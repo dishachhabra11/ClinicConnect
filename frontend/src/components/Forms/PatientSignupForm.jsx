@@ -6,8 +6,9 @@ import PasswordField from "../InputFields/PasswordField";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../Headers/Header";
-
+import { useAuth } from "../../hooks/useAuth";
 const PatientSignupForm = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -51,12 +52,7 @@ const PatientSignupForm = () => {
       );
       // Handle success (e.g., display a success message or redirect)
       console.log("Patient created successfully:", response.data);
-      Cookies.set("token", response.data.token, {
-        expires: 7, // Optional, set expiry in days
-        secure: process.env.NODE_ENV === "production", // Only use secure flag in production
-        sameSite: "Lax", // Ensures cookies are sent in cross-site requests
-        path: "/",
-      });
+      login(response.data.token);
       navigate("/");
     } catch (error) {
       // Handle error (e.g., display an error message)

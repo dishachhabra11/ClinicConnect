@@ -5,11 +5,13 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import InitialAvatar from "../InitialAvatar";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const NavigationHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   // console.log(user[1]);
   useEffect(() => {
@@ -57,7 +59,9 @@ const NavigationHeader = () => {
               <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={() => navigate("/ongoing-appointments")}>
                 Appointments
               </a>
-              <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer">Logout</a>
+              <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={() => logout()}>
+                Logout
+              </a>
             </div>
           )}
         </div>

@@ -5,8 +5,10 @@ import PasswordField from "../InputFields/PasswordField";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth.jsx";
 
 const PatientSigninForm = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -30,16 +32,12 @@ const PatientSigninForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials:true,
+        withCredentials: true,
       });
-      if (!response.data.token) { 
+      if (!response.data.token) {
         alert("login unsuccessful");
-      }
-      else {
-        Cookies.set("clinicConnect", response.data.token, {
-          expires: 15,
-          sameSite: "strict",
-        });
+      } else {
+        login(response.data.token);
         navigate("/");
       }
       console.log("login successful", response.data.token);
