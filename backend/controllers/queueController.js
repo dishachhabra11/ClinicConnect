@@ -50,6 +50,13 @@ export const addUserToQueue = async (req, res, io) => {
     queue.lastToken = tokenNumber;
     await queue.save();
 
+    const clinicVisited = new clinicsVisitedModel({
+      clinicId: clinicId,
+      symptoms: symptoms || "Not specified",
+      status: "waiting",
+    });
+    await clinicVisited.save();
+
     // Emit the new patient to the clinic
     io.to(clinicId).emit("newPatient", newUser);
 
@@ -83,11 +90,16 @@ export const dequeueUser = async (req, res, io) => {
 
     await queue.save(); // Save changes to the queue
 
-    const clinicVisited = new clinicsVisitedModel({
-      clinicId: clinicId,
-      symptoms: dequeuedUser.symptoms || "Not specified",
-      status: "completed",
-    });
+    const clinicVisited = clinicsVisitedModel.findOneAndUpdate(
+      {
+        clinicId: clinicId,
+      },
+      {
+        status: "completed",
+      }
+    );
+    await clinicVisited.save();
+
     const patient = await patientModel.findById(dequeuedUser.userId);
     patient.clinicsVisited.push(clinicVisited);
     await patient.save();

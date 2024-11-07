@@ -4,27 +4,37 @@ import patientModel from "../models/patientModel.js";
 
 export const auth = async (req, res, next) => {
   try {
-    if (unprotectedRoutes.includes(req.path)) {
+    
+    const isUnprotected = unprotectedRoutes.some((route) => (route instanceof RegExp ? route.test(req.path) : route === req.path));
+  console.log("Auth middlewares");
+    if (isUnprotected) {
+      console.log("Unprotected route");
       return next();
+      
     }
-    let token = "";
-    token = req.cookies.clinicConnect;
-    if (token==undefined || token=="") {
+
+    let token = req.cookies.clinicConnect;
+    if (!token) {
       return res.status(401).json({
-        message: "your are not authorized because token is missing",
+        message: "You are not authorized because the token is missing",
       });
     }
+
     const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
     if (!verifyToken) {
       return res.status(401).json({
-        message: "your are not authorized, token expired",
+        message: "You are not authorized, token expired",
       });
     }
-    const user= await patientModel.findById(verifyToken.id);
+    else {
+      console.log("Token verified");
+    }
+
+    const user = await patientModel.findById(verifyToken.id);
     req.user = user;
     console.log(req.user);
     next();
   } catch (error) {
-    return res.status(501).json(error.message);
+    return res.status(501).json({ message: error.message });
   }
 };

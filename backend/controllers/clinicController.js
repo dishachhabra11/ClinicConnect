@@ -3,9 +3,10 @@ import bycrpt from "bcryptjs";
 import Queue from "../models/queueModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import clinicsVisitedModel from "../models/clinicsVisitedModel.js";
 
 export const createClinic = async (req, res) => {
-  const { name, email, password, address, city, pincode, state, openTimeSlots, openDays } = req.body;
+  const { name, email, password, address, city, pincode, state, openTimeSlots, openDays, doctor } = req.body;
 
   try {
     let imageUrls = [];
@@ -27,6 +28,7 @@ export const createClinic = async (req, res) => {
       openTimeSlots,
       openDays,
       image: imageUrls || [],
+      doctor,
     });
 
     await clinic.save();
@@ -211,5 +213,33 @@ export const getQueueByqueueIdandStatus = async (req, res) => {
     res.status(200).json({ queue, isPresent });
   } catch (error) {
     return res.status(500).json({ message: "Failed to retrieve queue", error });
+  }
+};
+
+// Controller to get clinic details for a given array of clinic IDs
+export const getClinicsByClinicIds = async (req, res) => {
+  try {
+    // Extract clinicsVisited from req.user or set it to an empty array if not available
+    const clinicsVisited = req.user.clinicsVisited ? req.user.clinicsVisited : [];
+
+    // Map over clinicsVisited to extract only the _id values
+    const clinicIds = clinicsVisited.map((clinic) => clinic._id);
+    console.log(clinicIds);
+
+    if (!clinicIds || clinicIds.length === 0) {
+      return res.status(400).json({ message: "Invalid or missing clinicIds array" });
+    }
+
+    // Find all clinics with the provided IDs
+    const clinics = await clinicsVisitedModel.find({ _id: { $in: clinicIds } });
+
+    if (clinics.length === 0) {
+      return res.status(404).json({ message: "No clinics found for the provided IDs" });
+    }
+
+    res.status(200).json(clinics);
+  } catch (error) {
+    console.error("Error fetching clinics by clinic IDs:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

@@ -1,6 +1,8 @@
 import Patient from "../models/patientModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import clinicsVisitedModel from "../models/clinicsVisitedModel.js";
+import clinicModel from "../models/clinicModel.js";
 
 export const createPatient = async (req, res) => {
   try {
@@ -94,3 +96,43 @@ export const signinPatient = async (req, res) => {
     return res.status(500).json({ message: "Server error", error });
   }
 };
+
+export const getClinicsByClinicIds = async (req, res) => {
+  try {
+    // Extract clinicsVisitedIds from req.user or set to an empty array if not available
+    const clinicsVisitedIds = req.user.clinicsVisited ? req.user.clinicsVisited : [];
+
+    if (clinicsVisitedIds.length === 0) {
+      return res.status(400).json({ message: "No clinics visited" });
+    }
+
+    // Fetch all visited clinics' details from clinicsVisitedModel
+    const clinicsVisited = await clinicsVisitedModel.find({
+      _id: { $in: clinicsVisitedIds },
+    });
+
+    // Map clinicId to find associated clinic details from clinicModel
+    const clinicIds = clinicsVisited.map((clinic) => clinic.clinicId);
+    const clinics = await clinicModel.find({ _id: { $in: clinicIds } });
+
+    // Combine details of clinicsVisited with the clinic name and other fields from clinicModel
+    const clinicsWithDetails = clinicsVisited.map((visited) => {
+      const clinic = clinics.find((c) => c._id.toString() === visited.clinicId.toString());
+      return {
+        ...visited.toObject(), 
+        clinicName: clinic ? clinic.name : null,
+      };
+    });
+
+    // Check if any clinics were found
+    if (clinicsWithDetails.length === 0) {
+      return res.status(404).json({ message: "No clinics found for the provided IDs" });
+    }
+
+    res.status(200).json(clinicsWithDetails);
+  } catch (error) {
+    console.error("Error fetching clinics by clinic IDs:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+

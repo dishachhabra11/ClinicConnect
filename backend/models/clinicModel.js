@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Queue from "./queueModel.js";
+import { Doctor } from "./doctorModel.js";
 
 const Clinic = new mongoose.Schema({
   name: {
@@ -49,10 +50,10 @@ const Clinic = new mongoose.Schema({
     ref: "Queue",
     required: false,
   },
-  doctors: [
+  doctor: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
+      type: Doctor,
+    
       required: false,
     },
   ],

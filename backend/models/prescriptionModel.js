@@ -7,17 +7,12 @@ const Prescription = new mongoose.Schema({
     ref: "Clinic",
     required: true,
   },
-  doctor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor",
-    required: true,
-  },
   patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Patient",
     required: true,
   },
-    medications: [Medicine],
+  medications: [Medicine],
   dateIssued: {
     type: Date,
     default: Date.now,

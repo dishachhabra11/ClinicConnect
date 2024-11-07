@@ -42,13 +42,7 @@ const PatientSchema = new mongoose.Schema({
       ref: "ClinicVisit",// Referencing the schema, not the model itself
       required: false, // Optional field
     },
-  ], // Includes clinic visits, symptoms, registration time, and priority number
-  // prescriptions: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "Prescription",
-  //   },
-  // ],
+  ]
 });
 
 export default mongoose.model("Patient", PatientSchema);

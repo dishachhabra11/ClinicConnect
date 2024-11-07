@@ -6,13 +6,15 @@ const ClinicVisitSchema = new mongoose.Schema({
     ref: "Clinic",
     required: true, // Reference to the clinic the patient is visiting
   },
-  symptoms: {
-    type: String,
-    required: true,
-  },
+  symptoms: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
   registrationTime: {
     type: Date,
-    default: Date.now, 
+    default: Date.now,
   },
   status: {
     type: String,

@@ -7,6 +7,7 @@ router.post("/createClinic", clinicUploads, createClinic);
 router.post("/signinClinic", clinicSignIn);
 router.get("/filter", searchClinics); // Create a clinic
 router.get("/getQueue/:queueId", getQueueByqueueIdandStatus); // Search clinics
+
 router.put("/:id", updateClinic); // Update clinic by ID
 router.delete("/:id", deleteClinic); // Delete clinic by ID
 router.get("/", getAllClinics); // Get all clinics
