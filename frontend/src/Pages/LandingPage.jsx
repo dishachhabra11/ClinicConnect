@@ -4,6 +4,8 @@ import SearchBar from "../components/SearchBar";
 import LandingPageHeader from "../components/Headers/LandingPageHeader";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import NavigationHeader from "../components/Headers/NavigationHeader";
 
 const debounce = (func, delay) => {
   let timer;
@@ -38,9 +40,10 @@ const LandingPage = () => {
     setSearchQuery(e.target.value);
     callSearchApi(e);
   };
+  const { isAuthenticated } = useAuth();
   return (
     <div>
-      <LandingPageHeader />
+      {isAuthenticated == false ? <LandingPageHeader /> : <NavigationHeader />}
       <div className="mx-[10%] h-screen  flex flex-col justify-center">
         <div className="relative rounded-xl h-[450px] w-full overflow-hidden">
           <img src={landingImage} alt="Landing" className="absolute top-0 left-0 w-full h-full object-cover" />
@@ -48,20 +51,24 @@ const LandingPage = () => {
             <h1 className="text-5xl font-bold text-black mt-10 text-center">Delivering high-quality healthcare</h1>
             <p className="text-xl text-gray-200 font-semibold text-center mt-4">Find the right clinic for you..</p>
 
-            <div className="w-[60%] mt-5 mx-auto" onKeyDown={(e) => {
-              if (e.key == "Enter") {
-                console.log("Enter pressed");
-                const clinics = relatedClinics;
-                navigate("/clinics", { state: { clinics } });
-              }
-            }}>
+            <div
+              className="w-[60%] mt-5 mx-auto"
+              onKeyDown={(e) => {
+                if (e.key == "Enter") {
+                  console.log("Enter pressed");
+                  const clinics = relatedClinics;
+                  navigate("/clinics", { state: { clinics } });
+                }
+              }}>
               <SearchBar placeholder="Search by clinics or hospitals" searchQuery={searchQuery} onChange={searchClinics} />
               {relatedClinics.length > 0 && (
                 <div className="w-full bg-white rounded-lg h-auto max-h-[150px] overflow-y-scroll">
                   {relatedClinics.map((clinic) => (
-                    <div className="w-full h-[50px] flex justify-between items-center px-3 py-[2px] shadow cursor-pointer" onClick={() => {
-                      navigate("/clinic/" + clinic._id);
-                    }}>
+                    <div
+                      className="w-full h-[50px] flex justify-between items-center px-3 py-[2px] shadow cursor-pointer"
+                      onClick={() => {
+                        navigate("/clinic/" + clinic._id);
+                      }}>
                       <p className="text-md font-normal text-gray-700">{clinic.name}</p>
                     </div>
                   ))}

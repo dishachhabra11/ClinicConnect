@@ -25,8 +25,8 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/clinics" element={<SearchedClinic />} />
-            <Route path="/clinic/register" element={<ClinicRegisterForm />} />
-            <Route path="/clinic/signup" element={<ClinicSignupForm />} />
+            <Route path="/clinic/register" element={<ClinicSignupForm/>} />
+            <Route path="/clinic/signin" element={<ClinicRegisterForm/>} />
             <Route path="/patient/signin" element={<PatientSignInPage />} />
             <Route path="/patient/signup" element={<PatientSignupForm />} />
             <Route path="/clinic/:id" element={<ClinicPage />} />
