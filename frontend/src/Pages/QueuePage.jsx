@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import NavigationHeader from "../components/Headers/NavigationHeader";
 import axios from "axios";
 import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import CategorySelect from "./CategorySelect";
 import Button from "../components/Buttons/Button";
-import { useLocation } from "react-router-dom";
 
 function QueuePage() {
   const [token, setToken] = useState();
   const [currentToken, setCurrentToken] = useState();
-
   const clinicId = useParams().id;
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
@@ -20,81 +18,108 @@ function QueuePage() {
   const [patientInqueue, setPatientInqueue] = useState(false);
   const [queuelength, setQueueLength] = useState(0);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
-  
+  const [suggestions, setSuggestions] = useState([]);
 
   const getQueue = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/getQueue/${clinic.queue}`, { withCredentials: true });
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/getQueue/${clinic.queue}`, {
+        withCredentials: true,
+      });
 
+      console.log(res.data.isPresent.symptoms);
+      setSelectedSymptoms(res.data.isPresent.symptoms);
       setCurrentToken(res.data.queue.currentToken);
       setPatientInqueue(res.data.isPresent);
       setQueueLength(res.data.queue.patients.length);
 
-      if (res.data.isPresent != false) {
+      if (res.data.isPresent !== false) {
         setToken(res.data.isPresent.tokenNumber);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const fetchSuggestions = async () => { 
+    try {
+      const suggestionResponse = await axios.post(
+        "http://localhost:4000/api/suggestion",
+        { symptoms: selectedSymptoms },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Suggestions:", suggestionResponse.data.message);
+      const formattedSuggestions = suggestionResponse.data.message.split("@");
+      setSuggestions(formattedSuggestions);
+    } catch (error) {
+      console.error("Error fetching health suggestions:", error);
+    }
+  }
+  useEffect(() => { 
+    fetchSuggestions();
+  }, [selectedSymptoms]);
+
   useEffect(() => {
     getQueue();
   }, []);
 
-  console.log("patients in the queue", patientInqueue);
   useEffect(() => {
     const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
       withCredentials: true,
     });
     setSocket(newSocket);
 
-    // sent event to join clinic
     newSocket.emit("joinClinic", clinicId);
 
-    // listen for userDequeued event
     newSocket.on("userDequeued", (data) => {
-      setCurrentToken(data.tokenNumber); // Update the current token in state
+      setCurrentToken(data.tokenNumber);
     });
 
     return () => {
       newSocket.disconnect();
     };
   }, []);
-  
+
   const submitandEnterQueue = async () => {
     try {
       console.log("submitandEnterQueue");
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/queue/add`, { clinicId, symptoms:selectedSymptoms }, { withCredentials: true });
-      console.log("data after clinking enetr queue", res.data);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/queue/add`, { clinicId, symptoms: selectedSymptoms }, { withCredentials: true });
+
       setToken(res.data.newUser.tokenNumber);
       setCurrentToken(res.data.currentToken);
       setOverlapping(false);
       setPatientInqueue(res.data.newUser || res.data.isPresent);
+      fetchSuggestions();
+
+      // Fetch health suggestions based on symptoms
+      
     } catch (error) {
-      if (error.response.status === 400) {
+      if (error.response && error.response.status === 400) {
         setMessage("User already in queue");
+      } else {
+        console.log("An unexpected error occurred:", error);
       }
-      console.log(error);
     }
   };
 
-  const enterQueue = async () => {
+
+  const enterQueue = () => {
     setOverlapping(true);
   };
 
   return (
     <>
-      {overlapping == true ? (
+      {overlapping ? (
         <div>
           <CategorySelect onSubmit={submitandEnterQueue} onSymptomSelect={setSelectedSymptoms} />
-          
         </div>
       ) : (
         <div>
           <NavigationHeader />
           <div className="container mx-auto p-4 sm:max-w-[70%] flex justify-center flex-col items-center gap-4">
             <h2 className="text-xl font-bold text-center mb-4 font-inter">Queue Status</h2>
-            <div className="">
+            <div>
               {patientInqueue === false ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <TokenCard heading="Queue Length" number={queuelength} />
@@ -108,10 +133,16 @@ function QueuePage() {
                 </div>
               )}
             </div>
-            <div onClick={patientInqueue == false || !(token > 0) ? enterQueue : ""} className={`max-w-[250px] flex justify-center mt-2`}>
-              <Button bgColor="bg-primary">{patientInqueue === false ? "Enter queue" : "you are already in Queue"}</Button>
+            <div onClick={patientInqueue === false || !(token > 0) ? enterQueue : ""} className="max-w-[250px] flex justify-center mt-2">
+              <Button bgColor="bg-primary">{patientInqueue === false ? "Enter queue" : "You are already in queue"}</Button>
+            </div>
+              <p>Selected symptoms: { selectedSymptoms}</p>
+            {selectedSymptoms.length > 0 && (
+              <div className="suggestions">
+                <h3>Health Suggestions:</h3>
+                <pre className="font-inter p-10 m-5">{suggestions}</pre>
               </div>
-              <p>selected symtoms are:{selectedSymptoms}</p>
+            )}
           </div>
         </div>
       )}
@@ -129,7 +160,8 @@ const TokenCard = ({ heading, number }) => {
     </div>
   );
 };
-const formatTime = (time) => { 
+
+const formatTime = (time) => {
   let hours = Math.floor(time / 3600);
   let minutes = Math.floor((time - hours * 3600) / 60);
   let seconds = time - hours * 3600 - minutes * 60;

@@ -53,7 +53,6 @@ const Clinic = new mongoose.Schema({
   doctor: [
     {
       type: Doctor,
-    
       required: false,
     },
   ],
@@ -77,11 +76,13 @@ const Clinic = new mongoose.Schema({
       _id: false,
     },
   ],
-  openDays: {
-    type: [String],
-    enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
-    required: false,
-  },
+  openDays: [
+    {
+      type: String,
+      enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+      required: false,
+    },
+  ],
   image: [
     {
       type: String,
@@ -89,6 +90,13 @@ const Clinic = new mongoose.Schema({
       default: "https://via.placeholder.com/150",
     },
   ],
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      required: false,
+   }
+  ]
 });
 
 export default mongoose.model("Clinic", Clinic);

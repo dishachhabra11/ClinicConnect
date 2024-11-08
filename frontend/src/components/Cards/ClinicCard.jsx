@@ -3,8 +3,8 @@ import React from "react";
 const ClinicCard = ({ clinic }) => {
   console.log(clinic._id);
   return (
-    <div className="max-w-sm flex flex-col overflow-hidden bg-white rounded-xl  h-auto shadow border-none">
-      <div className="max-w-sm h-[150px]  flex items-center justify-center ">
+    <div className="max-w-xl flex flex-col overflow-hidden bg-white rounded-xl  h-auto shadow border-none">
+      <div className="max-w-lg h-[150px]  flex items-center justify-center ">
         <img src={clinic.image[0] ? clinic.image[0] : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSijvd4SoCLhCabJX9TEf10C84TzVGhBqSeyg&s"} alt="clinic" className="w-full h-full object-contain" />
       </div>
 

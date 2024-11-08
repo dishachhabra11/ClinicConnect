@@ -4,9 +4,10 @@ import Queue from "../models/queueModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import clinicsVisitedModel from "../models/clinicsVisitedModel.js";
+import Comment from "../models/comments.js";
 
 export const createClinic = async (req, res) => {
-  const { name, email, password, address, city, pincode, state, openTimeSlots, openDays, doctor } = req.body;
+  const { name, email, password, address, city, pincode, state, openTimeSlots, openDays, doctorName, doctorSpeciality } = req.body;
 
   try {
     let imageUrls = [];
@@ -28,7 +29,12 @@ export const createClinic = async (req, res) => {
       openTimeSlots,
       openDays,
       image: imageUrls || [],
-      doctor,
+      doctor: [
+        {
+          name: doctorName,
+          speciality: doctorSpeciality,
+        },
+      ],
     });
 
     await clinic.save();
@@ -47,6 +53,8 @@ export const createClinic = async (req, res) => {
 
     // Set cookie
     res.cookie("clinicToken", token, { httpOnly: true, secure: false, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
+
+    //remove queeue when deploying
 
     res.status(201).json({ message: "Clinic created successfully", clinic, queue, token });
   } catch (error) {
@@ -138,7 +146,7 @@ export const getAllClinics = async (req, res) => {
 export const getClinicById = async (req, res) => {
   try {
     const clinicId = req.params.id;
-    const clinic = await Clinic.findById(clinicId);
+    const clinic = await Clinic.findById(clinicId).populate("comments");
 
     if (!clinic) {
       return res.status(404).json({ message: "Clinic not found" });
@@ -241,5 +249,38 @@ export const getClinicsByClinicIds = async (req, res) => {
   } catch (error) {
     console.error("Error fetching clinics by clinic IDs:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const addCommentToClinic = async (req, res) => {
+  try {
+    const { clinicId, comment } = req.body;
+
+    // Create a new comment document
+    const newComment = new Comment({
+      comment,
+      username: req.user.name,
+    });
+
+    // Save the new comment to the Comment collection
+    const savedComment = await newComment.save();
+
+    // Find the clinic and push the comment ObjectId to its comments array
+    const clinic = await Clinic.findById(clinicId);
+
+    if (!clinic) {
+      return res.status(404).json({ message: "Clinic not found" });
+    }
+
+    // Add the saved comment's ID to the clinic's comments array
+    clinic.comments.push(savedComment._id);
+
+    // Save the clinic document with the updated comments array
+    await clinic.save();
+
+    res.status(201).json({ message: "Comment added successfully", comment: savedComment });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to add comment", error });
   }
 };

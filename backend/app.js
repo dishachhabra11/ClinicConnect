@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import { Server } from "socket.io";
 import queueRouter from "./routes/queueRouter.js";
+import suggestionRouter from "./routes/suggestionRouter.js";
 
 
 const app = express();
@@ -51,6 +52,7 @@ app.use("/", middlewareRouter);
 app.use("/api/clinic", clinicRouter);
 app.use("/api/patient", patientRouter);
 app.use("/api/queue", queueRouter(io));
+app.use("/api/suggestion", suggestionRouter);
 
 server.listen(port, () => {
   console.log("Server is running on port 4000");

@@ -1,10 +1,11 @@
 import express from "express";
-import { createClinic, updateClinic, deleteClinic, getAllClinics, getClinicById, searchClinics, clinicSignIn, getQueueByqueueIdandStatus } from "../controllers/clinicController.js";
+import { createClinic, updateClinic, deleteClinic, getAllClinics, getClinicById, searchClinics, clinicSignIn, getQueueByqueueIdandStatus, addCommentToClinic } from "../controllers/clinicController.js";
 import clinicUploads from "../middlewares/clinicImage.js";
 const router = express.Router();
 
 router.post("/createClinic", clinicUploads, createClinic);
 router.post("/signinClinic", clinicSignIn);
+router.post("/postComment", addCommentToClinic);
 router.get("/filter", searchClinics); // Create a clinic
 router.get("/getQueue/:queueId", getQueueByqueueIdandStatus); // Search clinics
 
