@@ -26,7 +26,6 @@ function QueuePage() {
         withCredentials: true,
       });
 
-      console.log(res.data.isPresent.symptoms);
       setSelectedSymptoms(res.data.isPresent.symptoms);
       setCurrentToken(res.data.queue.currentToken);
       setPatientInqueue(res.data.isPresent);
@@ -40,23 +39,19 @@ function QueuePage() {
     }
   };
 
-  const fetchSuggestions = async () => { 
+  const fetchSuggestions = async () => {
     try {
-      const suggestionResponse = await axios.post(
-        "http://localhost:4000/api/suggestion",
-        { symptoms: selectedSymptoms },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("Suggestions:", suggestionResponse.data.message);
-      const formattedSuggestions = suggestionResponse.data.message.split("@");
-      setSuggestions(formattedSuggestions);
+      if (selectedSymptoms.length > 0) {
+        const suggestionResponse = await axios.post("http://localhost:4000/api/suggestion", { symptoms: selectedSymptoms }, { withCredentials: true });
+        const formattedSuggestions = suggestionResponse.data.message.split("@");
+        setSuggestions(formattedSuggestions);
+      }
     } catch (error) {
       console.error("Error fetching health suggestions:", error);
     }
-  }
-  useEffect(() => { 
+  };
+
+  useEffect(() => {
     fetchSuggestions();
   }, [selectedSymptoms]);
 
@@ -83,7 +78,6 @@ function QueuePage() {
 
   const submitandEnterQueue = async () => {
     try {
-      console.log("submitandEnterQueue");
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/queue/add`, { clinicId, symptoms: selectedSymptoms }, { withCredentials: true });
 
       setToken(res.data.newUser.tokenNumber);
@@ -91,9 +85,6 @@ function QueuePage() {
       setOverlapping(false);
       setPatientInqueue(res.data.newUser || res.data.isPresent);
       fetchSuggestions();
-
-      // Fetch health suggestions based on symptoms
-      
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setMessage("User already in queue");
@@ -103,51 +94,65 @@ function QueuePage() {
     }
   };
 
-
   const enterQueue = () => {
     setOverlapping(true);
   };
-
-  return (
-    <>
-      {overlapping ? (
-        <div>
-          <CategorySelect onSubmit={submitandEnterQueue} onSymptomSelect={setSelectedSymptoms} />
-        </div>
-      ) : (
-        <div>
-          <NavigationHeader />
-          <div className="container mx-auto p-4 sm:max-w-[70%] flex justify-center flex-col items-center gap-4">
-            <h2 className="text-xl font-bold text-center mb-4 font-inter">Queue Status</h2>
-            <div>
-              {patientInqueue === false ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <TokenCard heading="Queue Length" number={queuelength} />
-                  <TokenCard heading="Expected Waiting Time" number={formatTime(15 * 60 * queuelength)} />
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <TokenCard heading="Current Token Number" number={currentToken} />
-                  <TokenCard heading="Your Token Number" number={token} />
-                  <TokenCard heading="Your Position in Queue" number={token - currentToken >= 0 ? token - currentToken : ""} />
-                </div>
-              )}
-            </div>
-            <div onClick={patientInqueue === false || !(token > 0) ? enterQueue : ""} className="max-w-[250px] flex justify-center mt-2">
-              <Button bgColor="bg-primary">{patientInqueue === false ? "Enter queue" : "You are already in queue"}</Button>
-            </div>
-              <p>Selected symptoms: { selectedSymptoms}</p>
-            {selectedSymptoms.length > 0 && (
-              <div className="suggestions">
-                <h3>Health Suggestions:</h3>
-                <pre className="font-inter p-10 m-5">{suggestions}</pre>
+return (
+  <>
+    {overlapping ? (
+      <div>
+        <CategorySelect onSubmit={submitandEnterQueue} onSymptomSelect={setSelectedSymptoms} />
+      </div>
+    ) : (
+      <div>
+        <NavigationHeader />
+        <div className="container mx-auto p-4 sm:max-w-[70%] flex justify-center flex-col items-center gap-4">
+          <h2 className="text-xl font-bold text-center mb-4 font-inter">Queue Status</h2>
+          <div>
+            {patientInqueue === false ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TokenCard heading="Queue Length" number={queuelength} />
+                <TokenCard heading="Expected Waiting Time" number={formatTime(15 * 60 * queuelength)} />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <TokenCard heading="Current Token Number" number={currentToken} />
+                <TokenCard heading="Your Token Number" number={token} />
+                <TokenCard heading="Your Position in Queue" number={token - currentToken >= 0 ? token - currentToken : ""} />
               </div>
             )}
           </div>
+          <div onClick={patientInqueue === false || !(token > 0) ? enterQueue : undefined} className="max-w-[250px] flex justify-center mt-2">
+            <Button bgColor="bg-primary">{patientInqueue === false ? "Enter queue" : "You are already in queue"}</Button>
+          </div>
+
+          {selectedSymptoms && selectedSymptoms.length > 0 ? (
+            <div>
+              <div>
+                <p>Selected symptoms:</p>
+                <ul>
+                  {selectedSymptoms.map((symptom, index) => (
+                    <li key={index}>{symptom}</li>
+                  ))}
+                </ul>
+              </div>
+              {suggestions && suggestions.length > 0 ? (
+                <div>
+                  <p>Health Suggestions:</p>
+                  <ul>
+                    {suggestions.map((suggestion, index) => (
+                      <li key={index}>{suggestion}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
-      )}
-    </>
-  );
+      </div>
+    )}
+  </>
+);
 }
 
 export default QueuePage;

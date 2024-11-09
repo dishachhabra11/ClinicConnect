@@ -63,7 +63,7 @@ function ClinicPage() {
     "https://via.placeholder.com/800x400.png?text=Image+2",
     "https://via.placeholder.com/800x400.png?text=Image+3",
   ];
-  console.log(comments);
+  // console.log(clinic.doctor[0].name);
   return (
     <div>
       <NavigationHeader />
@@ -115,7 +115,7 @@ function ClinicPage() {
         </div>
       </div>
 
-      <div className="p-4">
+      {/* <div className="p-4">
         <h2>Comments</h2>
         <div className="mb-4">
           <textarea
@@ -135,7 +135,7 @@ function ClinicPage() {
         {comments.map((comment) => (
           <CommentSection key={comment._id} comment={comment} />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
