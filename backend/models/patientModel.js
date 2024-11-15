@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import ClinicVisit from "./clinicsVisitedModel.js"; // Correct import for the ClinicVisit model
 
-const PatientSchema = new mongoose.Schema({
+export const PatientSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,

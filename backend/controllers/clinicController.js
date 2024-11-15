@@ -17,6 +17,7 @@ export const createClinic = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("hashed",password," ",hashedPassword);
 
     const clinic = new Clinic({
       name,
@@ -52,7 +53,7 @@ export const createClinic = async (req, res) => {
     const token = jwt.sign({ id: clinic._id, role: "clinic" }, process.env.JWT_SECRET, { expiresIn: "15d" });
 
     // Set cookie
-    res.cookie("clinicToken", token, { httpOnly: true, secure: false, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
+    res.cookie("clinicConnectAdmin", token, { httpOnly: true, secure: false, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
 
     //remove queeue when deploying
 
@@ -75,21 +76,31 @@ export const clinicSignIn = async (req, res) => {
     // Check password
     const isMatch = await bcrypt.compare(password, clinic.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Wrong password" });
     }
 
     // Generate JWT token
     const token = jwt.sign({ id: clinic._id, role: "clinic" }, process.env.JWT_SECRET, { expiresIn: "15d" });
 
     // Set cookie
-    res.cookie("clinicToken", token, { httpOnly: true, secure: true, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
+    res.cookie("clinicConnectAdmin", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 1000 * 60 * 60 * 24 * 15, // 15 days
+    });
 
-    res.status(200).json({ message: "Clinic signed in successfully", clinic });
+    // Send success response
+    return res.status(200).json({
+      message: "Clinic signed in successfully",
+      clinic:clinic,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error signing in clinic", error });
+    console.error(error);
+    return res.status(500).json({ message: "Error signing in clinic", error });
   }
 };
+
 
 // Update an existing clinic by ID
 export const updateClinic = async (req, res) => {
@@ -146,7 +157,7 @@ export const getAllClinics = async (req, res) => {
 export const getClinicById = async (req, res) => {
   try {
     const clinicId = req.params.id;
-    const clinic = await Clinic.findById(clinicId).populate("comments");
+    const clinic = await Clinic.findById(clinicId).populate("comments").populate("queue");
 
     if (!clinic) {
       return res.status(404).json({ message: "Clinic not found" });

@@ -9,14 +9,14 @@ const mistral = new Mistral({
 });
 
 async function run(req, res) {
-  let symptoms = req.body.symptoms.join(", ");
+  let symptoms = req.body.symptoms;
   console.log(symptoms);
   try {
     const result = await mistral.chat.complete({
       model: "mistral-small-latest", // Check if this is the correct model name
       messages: [
         {
-          content: `I am having ${symptoms}. What healthcare tips can you suggest for me , you also suggest diet not tointake or exercises ot yoga?, also provide the response in which each point is seperated by a @ sign so i can display it in a list format and do no give extra information , directly give the tips`,
+          content: `I am having ${symptoms}. What healthcare tips can you suggest for me , you also suggest diet not to intake or exercises ?,  provide each suggestion with title and desctiption of sugggestion , seperate title and description by a $ and each suggestion is seperated by a @ sign so i can display it in a list format and do no give extra information , directly give the tips`,
           role: "user",
         },
       ],

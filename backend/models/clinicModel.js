@@ -63,19 +63,12 @@ const Clinic = new mongoose.Schema({
       required: false,
     },
   ],
-  openTimeSlots: [
+  openTimeSlots: 
     {
-      startTime: {
-        type: String, // e.g., "09:00 AM"
-        required: false,
-      },
-      endTime: {
-        type: String, // e.g., "05:00 PM"
-        required: false,
-      },
-      _id: false,
+      type: String,
+      required: false,
     },
-  ],
+  
   openDays: [
     {
       type: String,
