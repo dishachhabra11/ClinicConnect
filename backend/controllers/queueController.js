@@ -62,7 +62,6 @@ export const addUserToQueue = async (req, res, io) => {
 
     return res.status(201).json({ message: "User added to queue successfully", newUser, currentToken: queue.currentToken });
   } catch (error) {
-    console.error("Error adding user to queue:", error); // Log the error for debugging
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -70,11 +69,8 @@ export const addUserToQueue = async (req, res, io) => {
 export const dequeueUser = async (req, res, io) => {
   try {
     const { clinicId } = req.body;
-    console.log("Dequeue user", clinicId);
-
     const clinic = await clinicModel.findById(clinicId);
     if (!clinic) {
-      console.log("Clinic not found");
       return res.status(404).json({ message: "Clinic not found" });
     }
 
@@ -82,14 +78,12 @@ export const dequeueUser = async (req, res, io) => {
     const queue = await Queue.findById(queueId);
 
     if (!queue || queue.patients.length === 0) {
-      console.log("No users in queue");
       return res.status(404).json({ message: "No users in queue" });
     }
 
     // Dequeue the first user
     const dequeuedUser = queue.patients.shift();
     if (!dequeuedUser) {
-      console.log("Dequeued user is undefined");
       return res.status(500).json({ message: "Dequeued user is undefined" });
     }
 
@@ -107,13 +101,11 @@ export const dequeueUser = async (req, res, io) => {
     );
 
     if (!clinicVisited) {
-      console.log("Clinic visited record not found or updated");
       return res.status(500).json({ message: "Clinic visited record error" });
     }
 
     const patient = await patientModel.findById(dequeuedUser.userId);
     if (!patient) {
-      console.log("Patient not found");
       return res.status(404).json({ message: "Patient not found" });
     }
 
@@ -128,7 +120,6 @@ export const dequeueUser = async (req, res, io) => {
     const user = await patientModel.findById(dequeuedUser.userId);
     return res.status(200).json({ message: "User dequeued", user, dequeuedUser });
   } catch (error) {
-    console.error("Error in dequeueUser:", error); // Log the error details
     return res.status(500).json({ message: "An error occurred", error });
   }
 };

@@ -6,9 +6,7 @@ import clinicModel from "../models/clinicModel.js";
 export const auth = async (req, res, next) => {
   try {
     const isUnprotected = unprotectedRoutes.some((route) => (route instanceof RegExp ? route.test(req.path) : route === req.path));
-    console.log("Auth middlewares");
     if (isUnprotected) {
-      console.log("Unprotected route");
       return next();
     }
 
@@ -29,11 +27,9 @@ export const auth = async (req, res, next) => {
             message: "You are not authorized, token expired",
           });
         } else {
-          console.log("Token verified");
         }
         const clinic = await clinicModel.findById(verifyToken.id);
         req.user = clinic;
-        console.log(clinic);
         next();
       }
     }
@@ -45,12 +41,10 @@ export const auth = async (req, res, next) => {
            message: "You are not authorized, token expired",
          });
        } else {
-         console.log("Token verified");
        }
 
        const user = await patientModel.findById(verifyToken.id);
        req.user = user;
-       console.log(req.user);
        next();
    }
   } catch (error) {

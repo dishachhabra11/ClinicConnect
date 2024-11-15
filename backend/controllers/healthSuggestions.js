@@ -21,9 +21,6 @@ async function run(req, res) {
         },
       ],
     });
-
-    // Display the result
-    console.log("Health Suggestions:", result.choices[0].message.content);
     return res.status(200).json({ message: result.choices[0].message.content });
   } catch (error) {
     console.error("Error fetching health suggestions:", error);

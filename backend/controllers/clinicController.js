@@ -12,12 +12,10 @@ export const createClinic = async (req, res) => {
   try {
     let imageUrls = [];
     if (req.files && req.files.length > 0) {
-      console.log(req.files);
       imageUrls = req.files.map((file) => file.path);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("hashed",password," ",hashedPassword);
 
     const clinic = new Clinic({
       name,
@@ -59,7 +57,6 @@ export const createClinic = async (req, res) => {
 
     res.status(201).json({ message: "Clinic created successfully", clinic, queue, token });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Error creating clinic", error });
   }
 };
@@ -93,14 +90,12 @@ export const clinicSignIn = async (req, res) => {
     // Send success response
     return res.status(200).json({
       message: "Clinic signed in successfully",
-      clinic:clinic,
+      clinic: clinic,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ message: "Error signing in clinic", error });
   }
 };
-
 
 // Update an existing clinic by ID
 export const updateClinic = async (req, res) => {
@@ -179,14 +174,10 @@ export const searchClinics = async (req, res) => {
   try {
     // Check if the query is a number (could be a pincode)
     const isNumber = !isNaN(query);
-    console.log(isNumber);
-    console.log(query);
 
     let clinics;
 
     if (isNumber) {
-      // Search by pincode
-      console.log("pincode");
       clinics = await Clinic.find({ pincode: query });
     } else {
       // Search by clinic name using regex for partial matches (case-insensitive)
@@ -243,7 +234,6 @@ export const getClinicsByClinicIds = async (req, res) => {
 
     // Map over clinicsVisited to extract only the _id values
     const clinicIds = clinicsVisited.map((clinic) => clinic._id);
-    console.log(clinicIds);
 
     if (!clinicIds || clinicIds.length === 0) {
       return res.status(400).json({ message: "Invalid or missing clinicIds array" });
@@ -258,7 +248,6 @@ export const getClinicsByClinicIds = async (req, res) => {
 
     res.status(200).json(clinics);
   } catch (error) {
-    console.error("Error fetching clinics by clinic IDs:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -291,7 +280,6 @@ export const addCommentToClinic = async (req, res) => {
 
     res.status(201).json({ message: "Comment added successfully", comment: savedComment });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Failed to add comment", error });
   }
 };
