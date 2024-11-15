@@ -31,7 +31,7 @@ const PrescriptionsPage = () => {
           <SearchBar placeholder="Filter by Clinic Name.." />
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-start">
           <div className="h-screen sm:w-[50%] w-full flex flex-col gap-4 m-5 items-center ">
             {
               visitedClinics.map((clinic) => {

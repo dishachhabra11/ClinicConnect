@@ -15,7 +15,7 @@ function LandingPageHeader() {
           onClick={() => {
             navigate("/clinic/register");
           }}>
-          <a href="example.com">Register your Clinic?</a>
+          Register your Clinic?
         </p>
 
         <div className="flex gap-2">

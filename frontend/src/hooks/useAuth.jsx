@@ -33,8 +33,9 @@ export function AuthProvider({ children }) {
   const logout = () => {
     try {
       Cookies.remove("clinicConnect");
+      
       setIsAuthenticated(false);
-      console.log("Logged out successfully");
+      alert("Logged out successfully");
     } catch (error) {
       console.error("Error removing token from cookies:", error);
     }
