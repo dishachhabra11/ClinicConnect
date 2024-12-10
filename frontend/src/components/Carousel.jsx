@@ -4,12 +4,12 @@ import "flowbite";
 function Carousel({ images }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      nextSlide();
-    }, 2000); // Change slide every 2 seconds
-    return () => clearInterval(intervalId);
-  }, [activeIndex]);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     nextSlide();
+  //   }, 2000); 
+  //   return () => clearInterval(intervalId);
+  // }, [activeIndex]);
 
   const nextSlide = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);

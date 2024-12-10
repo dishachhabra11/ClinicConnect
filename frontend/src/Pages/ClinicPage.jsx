@@ -59,7 +59,6 @@ function ClinicPage() {
    const doctorSpecialties = clinic.doctor && clinic.doctor.length > 0 ? clinic.doctor[0].speciality : ["Diabetes", "Kidney"];
 
   const images = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSijvd4SoCLhCabJX9TEf10C84TzVGhBqSeyg&s", "https://via.placeholder.com/800x400.png?text=Image+2", "https://via.placeholder.com/800x400.png?text=Image+3"];
-  // console.log(clinic.doctor[0].name);
   return (
     <div>
       <NavigationHeader />

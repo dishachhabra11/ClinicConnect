@@ -34,7 +34,7 @@ export const ClinicRegisterForm = () => {
       );
 
       // Assuming the cookie `clinicConnectAdmin` is automatically set by the backend
-      console.log("Success:", response.data);
+
       Cookies.set("clinicConnectAdmin", response.data.token); // Set the cookie with the token
       navigate(`/admin/${response.data.clinic._id}`); // Redirect to the admin page
       a
@@ -42,7 +42,6 @@ export const ClinicRegisterForm = () => {
 
       // Optionally redirect or perform other actions
     } catch (error) {
-      console.error("Error during submission:", error);
 
       // Display a meaningful error message
       setErrorMessage(error.response?.data?.message || "An error occurred. Please try again.");

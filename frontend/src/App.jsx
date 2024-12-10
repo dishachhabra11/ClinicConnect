@@ -31,7 +31,7 @@ function App() {
             <Route path="/patient/signin" element={<PatientSignInPage />} />
             <Route path="/patient/signup" element={<PatientSignupForm />} />
             <Route path="/clinic/:id" element={<ClinicPage />} />
-            <Route path="/queue/:id" element={ <QueuePage/>} />
+            <Route path="/queue/:id" element={ <ProtectedRoute element={<QueuePage/>}/>} />
             <Route path="/select" element={<CategorySelect />} />
             <Route path="/ongoing-appointments" element={<OngoingAppointments />} />
             <Route path="/prescriptions" element={<PrescriptionsPage />} />

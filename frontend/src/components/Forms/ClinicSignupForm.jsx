@@ -5,6 +5,7 @@ import PasswordField from "../InputFields/PasswordField";
 import { Header } from "../Headers/Header";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const ClinicSignupForm = () => {
   const navigate = useNavigate();
@@ -17,8 +18,6 @@ export const ClinicSignupForm = () => {
     city: "",
     state: "",
     address: "",
-    openTimeSlots: "",
-    openDays: "",
     doctorName: "",
     doctorSpeciality: "",
     healthcareProfessional: false,
@@ -44,7 +43,7 @@ export const ClinicSignupForm = () => {
     Object.keys(formData).forEach((key) => {
       form.append(key, formData[key]);
     });
-    if (clinicImages) form.append("clinicImages", clinicImages);
+    if (clinicImages) form.append("image", clinicImages);
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/createClinic`, form, {
@@ -52,6 +51,7 @@ export const ClinicSignupForm = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("Clinic created:", response.data);
 
       const { token } = response.data;
       Cookies.set("clinicConnectAdmin", token, { expires: 15, sameSite: "strict" });
@@ -63,7 +63,6 @@ export const ClinicSignupForm = () => {
       console.error("Error creating clinic:", error);
     }
   };
-  console.log(formData);
 
   return (
     <div>
@@ -94,12 +93,6 @@ export const ClinicSignupForm = () => {
 
               {/* State */}
               <TextField value={formData.state} onChange={handleChange} label="State" placeholder="Enter State" name="state" />
-
-              {/* Open Time Slots */}
-              <TextField value={formData.openTimeSlots} onChange={handleChange} label="Open Time Slots" placeholder="Enter Open Time Slots (e.g. 9 AM - 5 PM)" name="openTimeSlots" />
-
-              {/* Open Days */}
-              <TextField value={formData.openDays} onChange={handleChange} label="Open Days" placeholder="Enter Open Days (e.g. Mon - Fri)" name="openDays" />
 
               {/* Doctor Name */}
               <TextField value={formData.doctorName} onChange={handleChange} label="Doctor Name" placeholder="Enter Doctor Name" name="doctorName" />

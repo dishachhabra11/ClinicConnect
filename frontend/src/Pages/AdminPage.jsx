@@ -23,7 +23,7 @@ function AdminPage() {
   const getClinic = async () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/${id}`);
-      console.log(res.data);
+      
       setClinic(res.data);
       setCurrentToken(res.data.queue.currentToken);
       setLastToken(res.data.queue.lastToken);
@@ -61,7 +61,6 @@ function AdminPage() {
       }
     }
   };
-  console.log(clinic.queue);
   return (
     <div className="">
       <AdminHeader />

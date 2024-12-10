@@ -50,8 +50,7 @@ const PatientSignupForm = () => {
           },
         }
       );
-      // Handle success (e.g., display a success message or redirect)
-      console.log("Patient created successfully:", response.data);
+
       login(response.data.token);
       navigate("/");
     } catch (error) {

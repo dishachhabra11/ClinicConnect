@@ -23,7 +23,6 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const callSearchApi = async (e) => {
     e.preventDefault();
-    console.log(e.target.value);
     try {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/filter?query=${e.target.value}`, {
         withCredentials: true,
@@ -33,7 +32,6 @@ const LandingPage = () => {
     } catch (error) {
       console.log(error);
     }
-    console.log(res);
   };
   const debouncedSearch = debounce(callSearchApi, 500);
   const searchClinics = (e) => {
@@ -49,13 +47,13 @@ const LandingPage = () => {
           <img src={landingImage} alt="Landing" className="absolute top-0 left-0 w-full h-full object-cover" />
           <div className="relative flex flex-col  w-full h-full p-5 bg-blue-100 bg-opacity-60">
             <h1 className="text-5xl font-bold text-black mt-10 text-center">Delivering high-quality healthcare</h1>
-            <p className="text-xl text-gray-200 font-semibold text-center mt-4">Find the right clinic for you..</p>
+            <p className="sm:text-xl text-md text-gray-200 font-semibold text-center mt-4">Find the right clinic for you..</p>
 
             <div
               className="w-[60%] mt-5 mx-auto"
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
-                  console.log("Enter pressed");
+                  
                   const clinics = relatedClinics;
                   navigate("/clinics", { state: { clinics } });
                 }

@@ -56,9 +56,7 @@ const NavigationHeader = () => {
               <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={() => navigate("/prescriptions")}>
                 Prescriptions
               </a>
-              <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={() => navigate("/ongoing-appointments")}>
-                Appointments
-              </a>
+            
               <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={openModal}>
                 Logout
               </a>

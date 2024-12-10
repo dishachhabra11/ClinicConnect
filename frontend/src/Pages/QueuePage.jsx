@@ -22,10 +22,11 @@ function QueuePage() {
 
   const getQueue = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/getQueue/${clinic.queue}`, {
+      console.log("clinic is",clinic.queue);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/getQueue/${clinic.queue._id}`, {
         withCredentials: true,
       });
-
+      console.log(res.data);
       setSelectedSymptoms(res.data.isPresent.symptoms);
       setCurrentToken(res.data.queue.currentToken);
       setPatientInqueue(res.data.isPresent);

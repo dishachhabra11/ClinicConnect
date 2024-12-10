@@ -11,7 +11,7 @@ function LandingPageHeader() {
   return (
     <div>
       <Header>
-        <p
+        <p className="cursor-pointer"
           onClick={() => {
             navigate("/clinic/register");
           }}>

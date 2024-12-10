@@ -40,7 +40,6 @@ const AdminHeader = () => {
      const handleLogoutConfirm = () => {
        setLogoutModal(false);
        document.cookie = "clinicConnectAdmin=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-       console.log("Logged out successfully");
        document.getElementById("my_modal_5").close();
        navigate("/");
      };
