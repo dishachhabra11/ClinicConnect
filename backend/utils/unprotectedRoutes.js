@@ -1,1 +1,1 @@
-export const unprotectedRoutes = ["/api/clinic/signinClinic","/api/patient/signin-patient", "/api/patient/create-patient", "/api/clinic/createClinic", "/api/clinic/filter", /^\/api\/clinic\/[a-fA-F0-9]{24}$/, ];
+export const unprotectedRoutes = ["/api/queue/dequeue","/api/clinic/signinClinic","/api/patient/signin-patient", "/api/patient/create-patient", "/api/clinic/createClinic", "/api/clinic/filter", /^\/api\/clinic\/[a-fA-F0-9]{24}$/, ];

@@ -1,5 +1,4 @@
 import Clinic from "../models/clinicModel.js";
-import bycrpt from "bcryptjs";
 import Queue from "../models/queueModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -7,16 +6,18 @@ import clinicsVisitedModel from "../models/clinicsVisitedModel.js";
 import Comment from "../models/comments.js";
 
 export const createClinic = async (req, res) => {
-  const { name, email, password, address, city, pincode, state, openTimeSlots, openDays, doctorName, doctorSpeciality } = req.body;
-
   try {
-    let imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      imageUrls = req.files.map((file) => file.path);
-    }
+    const { name, email, password, address, city, pincode, state, openTimeSlots, openDays, doctorName, doctorSpeciality } = req.body;
 
+    console.log(req); // Handle image URLs from uploaded files
+    let imageUrls = [];
+
+    imageUrls.push(req.file.path);
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create the clinic object
     const clinic = new Clinic({
       name,
       email,
@@ -36,27 +37,38 @@ export const createClinic = async (req, res) => {
       ],
     });
 
+    // Save clinic to the database
     await clinic.save();
+    console.log("Clinic saved:", clinic);
 
+    // Create a queue associated with the clinic
     const queue = new Queue({
       clinicId: clinic._id,
-      patients: [],
     });
-
-    clinic.queue = queue._id;
+    // // Save the queue to the database
     await queue.save();
+    console.log("Queue saved:", queue);
+
+    // Link the queue ID to the clinic and save again
+    clinic.queue = queue._id;
     await clinic.save();
+    console.log("Updated clinic with queue reference:", clinic);
 
     // Generate JWT token
     const token = jwt.sign({ id: clinic._id, role: "clinic" }, process.env.JWT_SECRET, { expiresIn: "15d" });
 
-    // Set cookie
+    // Set cookie for the clinic
     res.cookie("clinicConnectAdmin", token, { httpOnly: true, secure: false, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
 
-    //remove queeue when deploying
-
-    res.status(201).json({ message: "Clinic created successfully", clinic, queue, token });
+    // Respond with success
+    res.status(201).json({
+      message: "Clinic created successfully",
+      clinic,
+      queue,
+      token,
+    });
   } catch (error) {
+    console.error("Error in createClinic function:", error); // Detailed error logging
     res.status(500).json({ message: "Error creating clinic", error });
   }
 };

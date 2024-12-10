@@ -1,5 +1,5 @@
 import multer from "multer";
-import cloudinary from "./cloudinaryConfig";
+import {cloudinary} from "./cloudinaryConfig";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const storage = new CloudinaryStorage({
@@ -12,5 +12,6 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const clinicUploads = multer({ storage });
+export const clinicUploads = multer({ storage });
+
 

@@ -12,7 +12,6 @@ import { Server } from "socket.io";
 import queueRouter from "./routes/queueRouter.js";
 import suggestionRouter from "./routes/suggestionRouter.js";
 
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -21,12 +20,10 @@ const io = new Server(server, {
     credentials: true,
   },
 });
-
-
 connectDB();
 
-// const app = express();
 app.use(express.json());
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -35,19 +32,16 @@ app.use(
 );
 app.use(cookieParser());
 const port = process.env.PORT || 4000;
+app.use("/api/clinic", clinicRouter);
 
 io.on("connection", (socket) => {
-
   // Listen for the "join clinic" event
   socket.on("joinClinic", (clinicId) => {
     socket.join(clinicId);
   });
-
-
 });
 
 app.use("/", middlewareRouter);
-app.use("/api/clinic", clinicRouter);
 app.use("/api/patient", patientRouter);
 app.use("/api/queue", queueRouter(io));
 app.use("/api/suggestion", suggestionRouter);

@@ -7,14 +7,19 @@ const queueSchema = new mongoose.Schema({
     ref: "Clinic",
     required: true,
   },
-  patients: [UserInQueue.schema],
+  patients: {
+    type: [UserInQueue.schema], // Array of UserInQueue schema
+    required: false, // Make this field optional
+  },
   lastToken: {
     type: Number,
     default: 0,
+    required: false,
   },
   currentToken: {
     type: Number,
     default: 0,
+    required: false,
   },
   createdAt: {
     type: Date,
