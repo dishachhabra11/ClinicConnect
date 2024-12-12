@@ -49,8 +49,9 @@ export const createPatient = async (req, res) => {
     res.cookie("clinicConnect", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
+      sameSite: "None",
       maxAge: 15 * 24 * 60 * 60 * 1000,
+      domain: ".onrender.com",
     });
 
     return res.status(201).json({
@@ -87,7 +88,7 @@ export const signinPatient = async (req, res) => {
       secure: false,
       sameSite: "None",
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      path: "/",
+      domain: ".onrender.com",
     });
 
     // Send the token back to the client
