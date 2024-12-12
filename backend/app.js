@@ -16,7 +16,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://clinicconnect-2.onrender.com/",
+    origin: "https://clinicconnect-2.onrender.com",
     credentials: true,
   },
 });
