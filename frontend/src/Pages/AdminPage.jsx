@@ -109,7 +109,7 @@ function AdminPage() {
           )}
 
           {/* Charts Section */}
-          {/* <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="bg-white p-4 rounded-lg shadow-md">
               <h2 className="text-lg font-semibold">Active Users</h2>
              
@@ -120,14 +120,14 @@ function AdminPage() {
               
               <div className="h-32 bg-gray-200 mt-4"></div>
             </div>
-          </div> */}
+          </div>
 
           {/* Order History or Follower Stats */}
-          {/* <div className="bg-white p-4 rounded-lg shadow-md">
+          <div className="bg-white p-4 rounded-lg shadow-md">
             <h2 className="text-xl font-bold">Order History / Follower Stats</h2>
            
             <div className="h-32 bg-gray-200 mt-4"></div>
-          </div> */}
+          </div>
         </main>
       </div>
     </div>
