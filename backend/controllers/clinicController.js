@@ -58,7 +58,7 @@ export const createClinic = async (req, res) => {
     const token = jwt.sign({ id: clinic._id, role: "clinic" }, process.env.JWT_SECRET, { expiresIn: "15d" });
 
     // Set cookie for the clinic
-    res.cookie("clinicConnectAdmin", token, { httpOnly: true, secure: false, sameSite: "Strict", maxAge: 1000 * 60 * 60 * 24 * 15 });
+    res.cookie("clinicConnectAdmin", token, { httpOnly: true, secure: true, sameSite: "None", maxAge: 1000 * 60 * 60 * 24 * 15 });
 
     // Respond with success
     res.status(201).json({
@@ -95,7 +95,7 @@ export const clinicSignIn = async (req, res) => {
     res.cookie("clinicConnectAdmin", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "Strict",
+      sameSite: "None",
       maxAge: 1000 * 60 * 60 * 24 * 15, // 15 days
     });
 
