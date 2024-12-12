@@ -266,16 +266,20 @@ export const getClinicsByClinicIds = async (req, res) => {
 
 export const addCommentToClinic = async (req, res) => {
   try {
+
     const { clinicId, comment } = req.body;
+    
 
     // Create a new comment document
     const newComment = new Comment({
       comment,
-      username: req.user.name,
+      username: "disha",
     });
 
+    console.log(comment);
+
     // Save the new comment to the Comment collection
-    const savedComment = await newComment.save();
+   await newComment.save();
 
     // Find the clinic and push the comment ObjectId to its comments array
     const clinic = await Clinic.findById(clinicId);
@@ -283,9 +287,8 @@ export const addCommentToClinic = async (req, res) => {
     if (!clinic) {
       return res.status(404).json({ message: "Clinic not found" });
     }
-
     // Add the saved comment's ID to the clinic's comments array
-    clinic.comments.push(savedComment._id);
+    // clinic.comments.push(newComment._id);
 
     // Save the clinic document with the updated comments array
     await clinic.save();

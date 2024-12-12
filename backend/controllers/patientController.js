@@ -88,7 +88,7 @@ export const signinPatient = async (req, res) => {
       secure: false,
       sameSite: "None",
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      domain: ".onrender.com",
+     
     });
 
     // Send the token back to the client

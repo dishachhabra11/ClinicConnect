@@ -3,6 +3,7 @@ import run from '../controllers/healthSuggestions.js';
 
 import dotenv from "dotenv";
 import { Mistral } from "@mistralai/mistralai";
+import { auth } from '../middlewares/authMiddleware.js';
 
 const mistral = new Mistral({
   apiKey: process.env.MISTRAL_API_KEY || "",
@@ -11,6 +12,6 @@ const mistral = new Mistral({
 // Load environment variables
 dotenv.config();
 const router = Router();
-router.post("/", run);
+router.post("/",auth, run);
 
 export default router;

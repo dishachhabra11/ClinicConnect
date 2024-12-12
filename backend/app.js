@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
 });
 
 app.use("/", middlewareRouter);
-app.use("/api/patient", patientRouter);
+app.use("/api/patient",middlewareRouter, patientRouter);
 app.use("/api/queue", queueRouter(io));
 app.use("/api/suggestion", suggestionRouter);
 

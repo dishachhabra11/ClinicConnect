@@ -13,7 +13,10 @@ export const auth = async (req, res, next) => {
     let token = req.cookies.clinicConnect;
     let role = "patient";
 
+    console.log("user token", token);
+
     if (!token) {
+      console.log("role is admin");
       token = req.cookies.clinicConnectAdmin;
       role = "admin";
       if (!token) {
@@ -35,6 +38,7 @@ export const auth = async (req, res, next) => {
     }
 
     else {
+       console.log("role is user");
        const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
        if (!verifyToken) {
          return res.status(401).json({
