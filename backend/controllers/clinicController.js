@@ -225,6 +225,9 @@ export const getQueueByqueueIdandStatus = async (req, res) => {
     if (!queue) {
       return res.status(404).json({ message: "Queue not found" });
     }
+    if (!req.user._id) {
+      return res.status(500).message("no user id gotten")
+    }
     let isPresent = false;
     if (queue.patients.length > 0) {
       for (let i = 0; i < queue.patients.length; i++) {

@@ -9,7 +9,7 @@ router.post("/createClinic", upload.single("image"), createClinic);
 router.post("/signinClinic", clinicSignIn);
 router.post("/postComment",auth, addCommentToClinic);
 router.get("/filter", searchClinics);
-router.get("/getQueue/:queueId", getQueueByqueueIdandStatus); // Search clinics
+router.get("/getQueue/:queueId",auth, getQueueByqueueIdandStatus); // Search clinics
 router.put("/:id", updateClinic); // Update clinic by ID
 router.delete("/:id", deleteClinic); // Delete clinic by ID
 router.get("/",auth, getAllClinics); // Get all clinics
