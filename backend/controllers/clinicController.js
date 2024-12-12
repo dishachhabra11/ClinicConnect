@@ -1,7 +1,7 @@
 import Clinic from "../models/clinicModel.js";
 import Queue from "../models/queueModel.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs"; 
 import clinicsVisitedModel from "../models/clinicsVisitedModel.js";
 import Comment from "../models/comments.js";
 
