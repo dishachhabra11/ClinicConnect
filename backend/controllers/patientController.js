@@ -84,7 +84,7 @@ export const signinPatient = async (req, res) => {
     const token = jwt.sign({ id: patient._id, name: patient.name }, process.env.JWT_SECRET, { expiresIn: "15d" });
     res.cookie("clinicConnect", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "None",
       maxAge: 15 * 24 * 60 * 60 * 1000,
     });
