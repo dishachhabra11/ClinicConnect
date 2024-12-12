@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
-import { Header } from "../components/Headers/Header";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import NavigationHeader from "../components/Headers/NavigationHeader";
 import AdminHeader from "../components/Headers/AdminHeader";
 import PatientCard from "../components/Cards/PatientCard";
+import Cookies from "js-cookie";
 
 function AdminPage() {
   const { id } = useParams();
@@ -21,8 +19,8 @@ function AdminPage() {
 
   const getClinic = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/${id}`);
-      
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/${id}`, { withCredentials: true });
+
       setClinic(res.data);
       setCurrentToken(res.data.queue.currentToken);
       setLastToken(res.data.queue.lastToken);

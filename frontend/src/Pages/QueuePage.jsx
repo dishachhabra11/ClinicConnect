@@ -141,9 +141,9 @@ const fetchSuggestions = async () => {
           </div>
 
           <div className="p-8">
-            {suggestions && suggestions.length > 0 ? <p className="text-2xl font-bold font-inter">Health tips for you</p> : " "}
+            {suggestions!=undefined && suggestions.length > 0 ? <p className="text-2xl font-bold font-inter">Health tips for you</p> : " "}
 
-            {suggestions && suggestions.length > 0 ? (
+            {suggestions !=undefined && suggestions.length > 0 ? (
               <div className="">
                 <ul>
                   {suggestions.map((suggestion, index) => (
