@@ -28,7 +28,7 @@ export const ClinicRegisterForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/clinic/signinClinic",
+        `${import.meta.env.VITE_BACKEND_URL}/api/clinic/signinClinic`,
         formData,
         { withCredentials: true } // Ensures cookies are included in the request
       );

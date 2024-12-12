@@ -10,9 +10,11 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import CommentSection from "../components/Cards/CommentSection";
+import { useAuth } from "../hooks/useAuth";
 
 function ClinicPage() {
   const { id } = useParams();
+  const { login } = useAuth();
   const [clinic, setClinic] = useState({});
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([{}]);
@@ -34,19 +36,23 @@ function ClinicPage() {
   // Add a new comment
   const addComment = async (text) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/clinic/postComment`,
-        {
-          clinicId: id,
-          comment: text,
-        },
-        { withCredentials: true }
-      );
-      // Ensure the response contains the expected data format
-      setComments([...comments, res.data.comment]);
-      if (res.data && res.data.comment && typeof res.data.comment === "string") {
+      if (!login) {
+        alert("Log in to comment");
+      } else {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URL}/api/clinic/postComment`,
+          {
+            clinicId: id,
+            comment: text,
+          },
+          { withCredentials: true }
+        );
+        // Ensure the response contains the expected data format
+        setComments([...comments, res.data.comment]);
+        if (res.data && res.data.comment && typeof res.data.comment === "string") {
+        }
+        setNewComment("");
       }
-      setNewComment("");
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +62,7 @@ function ClinicPage() {
     getSingleClinic();
   }, []);
   const doctorName = clinic.doctor && clinic.doctor.length > 0 ? clinic.doctor[0].name : "Dr Geet Lalwani";
-   const doctorSpecialties = clinic.doctor && clinic.doctor.length > 0 ? clinic.doctor[0].speciality : ["Diabetes", "Kidney"];
+  const doctorSpecialties = clinic.doctor && clinic.doctor.length > 0 ? clinic.doctor[0].speciality : ["Diabetes", "Kidney"];
 
   const images = ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSijvd4SoCLhCabJX9TEf10C84TzVGhBqSeyg&s", "https://via.placeholder.com/800x400.png?text=Image+2", "https://via.placeholder.com/800x400.png?text=Image+3"];
   return (
