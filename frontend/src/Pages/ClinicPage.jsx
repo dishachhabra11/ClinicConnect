@@ -82,12 +82,12 @@ function ClinicPage() {
             <Widget>
               <CurrencyRupeeIcon className="text-white" />
             </Widget>
-            <p className="font-light font-inter text-md text-slate-800"> ₹ 400-500/day</p>
+            <p className="font-light font-inter text-md text-slate-800"> {clinic.priceRange ? (clinic.priceRange.low ? clinic.priceRange.low + "₹" : "400 ₹") + "-" + (clinic.priceRange.high ? clinic.priceRange.high + "₹" : "500 ₹") : "400 ₹ - 500 ₹"}/day</p>
           </div>
           <div className="my-4 text-2xl font-bold flex">
             <Avatar width="w-12" height="h-12" rounded="rounded" />
             <div className="flex flex-col px-2">
-              <p className="font-medium font-inter text-xl text-slate-800">{doctorName }</p>
+              <p className="font-medium font-inter text-xl text-slate-800">{doctorName}</p>
               <p className="font-light font-inter text-sm text-slate-800">{doctorSpecialties}</p>
             </div>
           </div>

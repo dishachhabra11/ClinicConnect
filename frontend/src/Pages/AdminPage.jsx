@@ -6,7 +6,6 @@ import axios from "axios";
 import NavigationHeader from "../components/Headers/NavigationHeader";
 import AdminHeader from "../components/Headers/AdminHeader";
 import PatientCard from "../components/Cards/PatientCard";
-import { set } from "mongoose";
 
 function AdminPage() {
   const { id } = useParams();

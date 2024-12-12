@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import "./App.css";
 import LandingPage from "./Pages/LandingPage";
 import ClinicRegisterForm from "./components/Forms/ClinicRegisterForm";

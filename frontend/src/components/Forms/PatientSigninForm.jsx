@@ -39,6 +39,7 @@ const PatientSigninForm = () => {
       } else {
         login(response.data.token);
         navigate("/");
+        alert("User successfully signed in");
       }
       console.log("login successful", response.data.token);
     } catch (error) {

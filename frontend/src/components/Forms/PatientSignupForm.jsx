@@ -33,7 +33,7 @@ const PatientSignupForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/patient/create-patient",
+        `${import.meta.env.VITE_BACKEND_URL}/api/patient/create-patient`,
         {
           name: formData.name,
           email: formData.email,
@@ -53,6 +53,7 @@ const PatientSignupForm = () => {
 
       login(response.data.token);
       navigate("/");
+      alert("User successfully signed up");
     } catch (error) {
       // Handle error (e.g., display an error message)
       alert("errro occured while sign up");
