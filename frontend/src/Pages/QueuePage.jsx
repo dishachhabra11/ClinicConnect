@@ -43,7 +43,7 @@ function QueuePage() {
 const fetchSuggestions = async () => {
   try {
     if (selectedSymptoms.length > 0) {
-      const suggestionResponse = await axios.post("http://localhost:4000/api/suggestion", { symptoms: selectedSymptoms }, { withCredentials: true });
+      const suggestionResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/suggestion`, { symptoms: selectedSymptoms }, { withCredentials: true });
 
       // Remove '*' characters from the message
       let formattedSuggestions = suggestionResponse.data.message.replace(/\*/g, "");
