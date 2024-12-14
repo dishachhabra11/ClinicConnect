@@ -297,3 +297,13 @@ export const addCommentToClinic = async (req, res) => {
     res.status(500).json({ message: "Failed to add comment", error });
   }
 };
+
+const commonSymptoms = async (req, res) => { 
+  try {
+    const { id } = req.params;
+    const clinic = await Clinic.findById(id);
+    
+  } catch (error) {
+    
+  }
+}

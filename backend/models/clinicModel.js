@@ -59,7 +59,7 @@ const Clinic = new mongoose.Schema({
   patients: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Patient",
+      ref: "ClinicsVisitedModel",
       required: false,
     },
   ],

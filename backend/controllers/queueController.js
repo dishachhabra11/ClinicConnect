@@ -56,6 +56,7 @@ export const addUserToQueue = async (req, res, io) => {
       status: "waiting",
     });
     await clinicVisited.save();
+    clinic.patients.push(clinicVisited._id);
 
     // Emit the new patient to the clinic
     io.to(clinicId).emit("newPatient", newUser);
