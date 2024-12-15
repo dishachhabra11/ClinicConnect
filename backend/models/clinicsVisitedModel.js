@@ -4,7 +4,7 @@ const ClinicVisitSchema = new mongoose.Schema({
   clinicId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Clinic",
-    required: true, // Reference to the clinic the patient is visiting
+    required: true, 
   },
   symptoms: [
     {

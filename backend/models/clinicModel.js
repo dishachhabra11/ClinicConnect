@@ -59,16 +59,15 @@ const Clinic = new mongoose.Schema({
   patients: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ClinicsVisitedModel",
+      ref: "ClinicVisit",
       required: false,
     },
   ],
-  openTimeSlots: 
-    {
-      type: String,
-      required: false,
-    },
-  
+  openTimeSlots: {
+    type: String,
+    required: false,
+  },
+
   openDays: [
     {
       type: String,
@@ -88,8 +87,8 @@ const Clinic = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Comment",
       required: false,
-   }
-  ]
+    },
+  ],
 });
 
 export default mongoose.model("Clinic", Clinic);
