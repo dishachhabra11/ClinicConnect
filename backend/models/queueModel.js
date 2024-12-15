@@ -21,6 +21,11 @@ const queueSchema = new mongoose.Schema({
     default: 0,
     required: false,
   },
+  status: {
+    type: String,
+    enum: ["open", "closed"],
+    default: "open",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

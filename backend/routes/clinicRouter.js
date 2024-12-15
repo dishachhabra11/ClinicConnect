@@ -1,5 +1,5 @@
 import express from "express";
-import { createClinic, updateClinic, deleteClinic, getAllClinics, getClinicById, searchClinics, clinicSignIn, getQueueByqueueIdandStatus, addCommentToClinic, commonSymptoms, getClinicMonthlyPatientFlow } from "../controllers/clinicController.js";
+import { createClinic, updateClinic, deleteClinic, getAllClinics, getClinicById, searchClinics, clinicSignIn, getQueueByqueueIdandStatus, addCommentToClinic, commonSymptoms, getClinicMonthlyPatientFlow, closeQueue, openQueue } from "../controllers/clinicController.js";
 import { upload } from "../config/cloudinaryConfig.js";
 import { auth } from "../middlewares/authMiddleware.js";
 const router = express.Router();
@@ -12,6 +12,8 @@ router.get("/filter", searchClinics);
 router.get("/getQueue/:queueId", auth, getQueueByqueueIdandStatus); // Search clinics
 router.get("/commonSymptoms/:id", commonSymptoms);
 router.get("/monthlyPatientFlow/:id", getClinicMonthlyPatientFlow);
+router.post("/closeQueue/:id", closeQueue);
+router.post("/openQueue/:id", openQueue);
 router.put("/:id", updateClinic); // Update clinic by ID
 router.delete("/:id", deleteClinic); // Delete clinic by ID
 router.get("/",auth, getAllClinics); // Get all clinics

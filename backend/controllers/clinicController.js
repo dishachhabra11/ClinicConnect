@@ -298,41 +298,48 @@ export const addCommentToClinic = async (req, res) => {
   }
 };
 
-export const commonSymptoms = async (req, res) => { 
+export const commonSymptoms = async (req, res) => {
   try {
     const { id } = req.params;
     const clinic = await Clinic.findById(id).populate("patients");
-    const patients = clinic.patients;
-     
+    const past_date = new Date();
+    past_date.setDate(past_date.getDate() - 7);
+
+    let patients = clinic.patients;
+
     const commonSymptoms = new Map();
 
     patients.forEach((patient) => {
-      let symptoms = patient.symptoms;
-      symptoms.map((symptom) => {
-        if (commonSymptoms.has(symptom)) {
-          commonSymptoms.set(symptom, commonSymptoms.get(symptom) + 1);
-        } else {
-          commonSymptoms.set(symptom, 1);
-        }
-      });
+
+      let date = new Date(patient.registrationTime);
+      if (date > past_date) {
+        let symptoms = patient.symptoms;
+        symptoms.map((symptom) => {
+          if (commonSymptoms.has(symptom)) {
+            commonSymptoms.set(symptom, commonSymptoms.get(symptom) + 1);
+          } else {
+            commonSymptoms.set(symptom, 1);
+          }
+        });
+      }
+      
     });
     const sortedSymptoms = Array.from(commonSymptoms)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 7)
       .map(([symptom, count]) => ({ symptom, count }));
-    
-    res.status(200).json({ sortedSymptoms }); 
-    
+
+    res.status(200).json({ sortedSymptoms });
   } catch (error) {
     return res.status(500).json({ message: "Failed to retrieve common symptoms", error });
   }
-}
-export const getClinicMonthlyPatientFlow = async (req, res) => { 
+};
+export const getClinicMonthlyPatientFlow = async (req, res) => {
   try {
     const { id } = req.params;
     const clinic = await Clinic.findById(id).populate("patients");
     const patients = clinic.patients;
-    const curr_year = new Date().getFullYear(); 
+    const curr_year = new Date().getFullYear();
 
     const monthlyPatientFlow = new Map();
     patients.forEach((patient) => {
@@ -350,10 +357,44 @@ export const getClinicMonthlyPatientFlow = async (req, res) => {
     const sortedMonthlyPatientFlow = Array.from(monthlyPatientFlow)
       .sort((a, b) => a[0] - b[0])
       .map(([month, count]) => ({ month, count }));
-    
-    return res.status(200).json({ sortedMonthlyPatientFlow });
 
+    return res.status(200).json({ sortedMonthlyPatientFlow });
   } catch (error) {
     return res.status(500).json({ message: "Failed to retrieve monthly patient flow", error });
+  }
+};
+
+export const closeQueue = async (req,res) => { 
+  try {
+    const clinicId = req.params.id;
+    const clinic = await Clinic.findById(clinicId);
+    if (!clinic) {
+      return { message: "Clinic not found" };
+    } 
+    const queue = await Queue.findById(clinic.queue);
+    queue.lastToken = 0;
+    queue.currentToken = 0;
+    queue.status = "closed";
+    await queue.save();
+    return res.status(200).json({ message: "Queue closed successfully" });
+  } catch (error) { 
+    console.log(error);
+  }
+}
+
+export const openQueue = async (req,res) => { 
+  try {
+    const clinicId = req.params.id;
+    const clinic = await Clinic.findById(clinicId);
+    if (!clinic) {
+      return { message: "Clinic not found" };
+    }
+    const queue = await Queue.findById(clinic.queue);
+    queue.status = "open";
+    await queue.save();
+    return res.status(200).json({ message: "Queue opened successfully" });
+  }
+  catch (error) {
+    console.log(error);
   }
 }
