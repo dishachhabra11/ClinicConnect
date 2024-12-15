@@ -310,7 +310,6 @@ export const commonSymptoms = async (req, res) => {
     const commonSymptoms = new Map();
 
     patients.forEach((patient) => {
-
       let date = new Date(patient.registrationTime);
       if (date > past_date) {
         let symptoms = patient.symptoms;
@@ -322,7 +321,6 @@ export const commonSymptoms = async (req, res) => {
           }
         });
       }
-      
     });
     const sortedSymptoms = Array.from(commonSymptoms)
       .sort((a, b) => b[1] - a[1])
@@ -340,6 +338,7 @@ export const getClinicMonthlyPatientFlow = async (req, res) => {
     const clinic = await Clinic.findById(id).populate("patients");
     const patients = clinic.patients;
     const curr_year = new Date().getFullYear();
+    const curr_month = new Date().getMonth();
 
     const monthlyPatientFlow = new Map();
     patients.forEach((patient) => {
@@ -358,31 +357,31 @@ export const getClinicMonthlyPatientFlow = async (req, res) => {
       .sort((a, b) => a[0] - b[0])
       .map(([month, count]) => ({ month, count }));
 
-    return res.status(200).json({ sortedMonthlyPatientFlow });
+    return res.status(200).json({ sortedMonthlyPatientFlow, thisMonthPatientFlow: monthlyPatientFlow.get(curr_month) || 0 });
   } catch (error) {
     return res.status(500).json({ message: "Failed to retrieve monthly patient flow", error });
   }
 };
 
-export const closeQueue = async (req,res) => { 
+export const closeQueue = async (req, res) => {
   try {
     const clinicId = req.params.id;
     const clinic = await Clinic.findById(clinicId);
     if (!clinic) {
       return { message: "Clinic not found" };
-    } 
+    }
     const queue = await Queue.findById(clinic.queue);
     queue.lastToken = 0;
     queue.currentToken = 0;
     queue.status = "closed";
     await queue.save();
     return res.status(200).json({ message: "Queue closed successfully" });
-  } catch (error) { 
+  } catch (error) {
     console.log(error);
   }
-}
+};
 
-export const openQueue = async (req,res) => { 
+export const openQueue = async (req, res) => {
   try {
     const clinicId = req.params.id;
     const clinic = await Clinic.findById(clinicId);
@@ -393,8 +392,7 @@ export const openQueue = async (req,res) => {
     queue.status = "open";
     await queue.save();
     return res.status(200).json({ message: "Queue opened successfully" });
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
   }
-}
+};
