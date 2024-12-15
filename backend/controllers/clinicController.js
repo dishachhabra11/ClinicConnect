@@ -315,8 +315,12 @@ export const commonSymptoms = async (req, res) => {
         }
       });
     });
-    commonSymptoms.sort((a, b) => b[1] - a[1]).slice(0, 7);
-    res.status(200).json({ commonSymptoms }); 
+    const sortedSymptoms = Array.from(commonSymptoms)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 7)
+      .map(([symptom, count]) => ({ symptom, count }));
+    
+    res.status(200).json({ sortedSymptoms }); 
     
   } catch (error) {
     return res.status(500).json({ message: "Failed to retrieve common symptoms", error });
