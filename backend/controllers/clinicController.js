@@ -337,8 +337,10 @@ export const getClinicMonthlyPatientFlow = async (req, res) => {
     const { id } = req.params;
     const clinic = await Clinic.findById(id).populate("patients");
     const patients = clinic.patients;
-    const curr_year = new Date().getFullYear();
-    const curr_month = new Date().getMonth();
+    const curr_date = new Date();
+    const curr_year = curr_date.getFullYear();
+    const curr_month = curr_date.getMonth();
+    let todayPatientFlow = 0;
 
     const monthlyPatientFlow = new Map();
     patients.forEach((patient) => {
@@ -351,13 +353,16 @@ export const getClinicMonthlyPatientFlow = async (req, res) => {
         } else {
           monthlyPatientFlow.set(month, 1);
         }
+        if(date==curr_date){
+          todayPatientFlow++;
+        }
       }
     });
     const sortedMonthlyPatientFlow = Array.from(monthlyPatientFlow)
       .sort((a, b) => a[0] - b[0])
       .map(([month, count]) => ({ month, count }));
 
-    return res.status(200).json({ sortedMonthlyPatientFlow, thisMonthPatientFlow: monthlyPatientFlow.get(curr_month) || 0 });
+    return res.status(200).json({ sortedMonthlyPatientFlow, thisMonthPatientFlow: monthlyPatientFlow.get(curr_month) || 0 },todayPatientFlow);
   } catch (error) {
     return res.status(500).json({ message: "Failed to retrieve monthly patient flow", error });
   }
