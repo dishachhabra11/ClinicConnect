@@ -298,12 +298,27 @@ export const addCommentToClinic = async (req, res) => {
   }
 };
 
-const commonSymptoms = async (req, res) => { 
+export const commonSymptoms = async (req, res) => { 
   try {
     const { id } = req.params;
-    const clinic = await Clinic.findById(id);
+    const clinic = await Clinic.findById(id).populate("patients");
+    const patients = clinic.patients;
+    const commonSymptoms = new Map();
+
+    patients.forEach((patient) => {
+      let symptoms = patient.symptoms;
+      symptoms.map((symptom) => {
+        if (commonSymptoms.has(symptom)) {
+          commonSymptoms.set(symptom, commonSymptoms.get(symptom) + 1);
+        } else {
+          commonSymptoms.set(symptom, 1);
+        }
+      });
+    });
+    commonSymptoms.sort((a, b) => b[1] - a[1]).slice(0, 7);
+    res.status(200).json({ commonSymptoms }); 
     
   } catch (error) {
-    
+    return res.status(500).json({ message: "Failed to retrieve common symptoms", error });
   }
 }
