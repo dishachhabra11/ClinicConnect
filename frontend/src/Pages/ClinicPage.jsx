@@ -111,7 +111,7 @@ function ClinicPage() {
         <h2 className="text-xl font-inter font-bold">Comments</h2>
         <div className=" w-full">
           <textarea className="w-full p-2 border-b-2 border-b-slate-500 rounded-lg outline-none" placeholder="Add a comment..." rows="2" value={newComment} onChange={(e) => setNewComment(e.target.value)} />
-          <button onClick={() => addComment(newComment)} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 border-none border-b-2">
+          <button onClick={() => addComment(newComment)} className="mt-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 border-none border-b-2">
             Add Comment
           </button>
           {comments.map((comment) => (

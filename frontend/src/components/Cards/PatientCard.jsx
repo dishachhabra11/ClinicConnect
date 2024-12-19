@@ -8,15 +8,15 @@ const PatientCard = ({ patient }) => {
         <p className="font-semibold">Patient Name:</p>
         {patient.name}
       </div>
-      <p className="text-lg font-inter mb-2 flex gap-2">
+      <div className="text-lg font-inter mb-2 flex gap-2">
         <p className="font-semibold">Symptoms:</p> {patient.symptoms}
-      </p>
-      <p className="text-lg font-inter mb-2 flex gap-2 ">
+      </div>
+      <div className="text-lg font-inter mb-2 flex gap-2 ">
         <p className="font-semibold"> Token Number:</p> {patient.tokenNumber}
-      </p>
-      <p className="text-lg font-inter mb-2 flex gap-2 ">
+      </div>
+      <div className="text-lg font-inter mb-2 flex gap-2 ">
         <p className="font-semibold">Gender:</p> {patient.gender}
-      </p>
+      </div>
     </div>
   );
 };

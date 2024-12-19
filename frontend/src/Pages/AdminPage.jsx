@@ -97,10 +97,18 @@ function AdminPage() {
       console.log(error);
     }
   }
+ const openQueue = async () => {
+   try {
+     const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/openQueue/${id}`, { withCredentials: true });
+     alert("Queue opened successfully");
+   } catch (error) {
+     alert("Error opening queue,please try again");
+     console.log(error);
+   }
+ };
 
   return (
     <div>
-      <AdminHeader />
       <div>
         <div className="p-2 ">
           <div className="text-center sm:text-3xl text-lg font-inter">Welcome to {clinic.name} !!</div>
@@ -109,7 +117,7 @@ function AdminPage() {
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 <StatCard title="Todays Patient flow" value={thisDayPatient} />
                 <StatCard title="Monthly Patient flow" value={thisMonthPatient} />
-                <StatCard title="Queue Length" value={lastToken-currentToken} />
+                <StatCard title="Queue Length" value={lastToken - currentToken} />
                 <StatCard title="Current token" value={currentToken} />
               </div>
             </div>
@@ -135,7 +143,14 @@ function AdminPage() {
                   </button>
                 </div>
                 <div className="bg-primary p-4 rounded-lg shadow-md flex justify-center items-center">
-                  <button className="sm:text-2xl text-lg font-semibold text-white font-inter" onClick={closeQueue}>Close queue</button>
+                  <button className="sm:text-2xl text-lg font-semibold text-white font-inter" onClick={closeQueue}>
+                    Close queue
+                  </button>
+                </div>
+                <div className="bg-primary p-4 rounded-lg shadow-md flex justify-center items-center">
+                  <button className="sm:text-2xl text-lg font-semibold text-white font-inter" onClick={openQueue}>
+                    Open queue
+                  </button>
                 </div>
               </div>
               <div className="mt-5 flex justify-center">

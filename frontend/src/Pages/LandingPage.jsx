@@ -7,37 +7,32 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import NavigationHeader from "../components/Headers/NavigationHeader";
 
-const debounce = (func, delay) => {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-};
-
 const LandingPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [relatedClinics, setRelatedClinics] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const callSearchApi = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/clinic/filter?query=${e.target.value}`, {
         withCredentials: true,
       });
       setRelatedClinics(res.data.clinics);
-      return res.data.clinics;
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+      setRelatedClinics([]);
       console.log(error);
     }
   };
-  const debouncedSearch = debounce(callSearchApi, 500);
+
   const searchClinics = (e) => {
     setSearchQuery(e.target.value);
     callSearchApi(e);
   };
+  console.log(relatedClinics);
   const { isAuthenticated } = useAuth();
   return (
     <div>
@@ -53,12 +48,11 @@ const LandingPage = () => {
               className="w-[60%] mt-5 mx-auto"
               onKeyDown={(e) => {
                 if (e.key == "Enter") {
-                  
                   const clinics = relatedClinics;
                   navigate("/clinics", { state: { clinics } });
                 }
               }}>
-              <SearchBar placeholder="Search by clinics or hospitals" searchQuery={searchQuery} onChange={searchClinics} />
+              <SearchBar placeholder="Search by clinics or hospitals" searchQuery={searchQuery} onChange={searchClinics} loading={loading} />
               {relatedClinics.length > 0 && (
                 <div className="w-full bg-white rounded-lg h-auto max-h-[150px] overflow-y-scroll">
                   {relatedClinics.map((clinic) => (

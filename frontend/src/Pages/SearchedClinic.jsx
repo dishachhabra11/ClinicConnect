@@ -18,13 +18,17 @@ const SearchedClinic = () => {
           <div className="h-screen bg-[#F3F5F3] p-4 w-full">
             {/* Cards container with flexbox */}
             <div className="flex flex-wrap justify-center gap-4">
-              {clinics.map((clinic) => {
-                return (
-                  <div onClick={() => navigate("/clinic/" + clinic._id)} className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 max-w-xs">
-                    <ClinicCard clinic={clinic} />
-                  </div>
-                );
-              })}
+              {clinics.length > 0 ? (
+                clinics.map((clinic) => {
+                  return (
+                    <div onClick={() => navigate("/clinic/" + clinic._id)} className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 max-w-xs">
+                      <ClinicCard clinic={clinic} />
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-xl font-semibold text-dark-gray font-inter">No clinics found</p>
+              )}
             </div>
           </div>
         </div>

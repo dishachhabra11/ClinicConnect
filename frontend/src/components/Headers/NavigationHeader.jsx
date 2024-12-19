@@ -53,9 +53,9 @@ const NavigationHeader = () => {
           </button>
           {isMobileMenuOpen && (
             <div className="absolute right-0 z-50 mt-2 w-48 bg-white rounded-md shadow-lg">
-              <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={() => navigate("/prescriptions")}>
+              {/* <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={() => navigate("/prescriptions")}>
                 Prescriptions
-              </a>
+              </a> */}
             
               <a className="block px-4 py-2 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer" onClick={openModal}>
                 Logout

@@ -10,7 +10,6 @@ import ClinicPage from "./Pages/ClinicPage";
 import QueuePage from "./Pages/QueuePage";
 import PatientSignInPage from "./Pages/PatientSignInPage";
 import CategorySelect from "./Pages/CategorySelect";
-import OngoingAppointments from "./Pages/OngoingAppointments";
 import PrescriptionsPage from "./Pages/PrescriptionsPage";
 import NotFoundPage from "./Pages/NotFoundPage";
 import { AuthProvider } from "./hooks/useAuth";
@@ -32,7 +31,6 @@ function App() {
             <Route path="/clinic/:id" element={<ClinicPage />} />
             <Route path="/queue/:id" element={ <ProtectedRoute element={<QueuePage/>}/>} />
             <Route path="/select" element={<CategorySelect />} />
-            <Route path="/ongoing-appointments" element={<OngoingAppointments />} />
             <Route path="/prescriptions" element={<PrescriptionsPage />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/admin/:id" element={<AdminPage />} />

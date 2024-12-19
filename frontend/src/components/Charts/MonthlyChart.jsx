@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect,useRef } from "react";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import { Line } from "react-chartjs-2";
 
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
 const MonthlyChart = ({ monthlyData }) => {
+  const chartRef= useRef(null);
   const labels = ["January", "February", "March", "April", "May", "June", "July", "August","September","October", "November", "December"];
     let monthlyChartData = new Array(12).fill(0);
     
@@ -54,10 +58,11 @@ const MonthlyChart = ({ monthlyData }) => {
       },
     },
   };
+
   return (
       <div>
           {console.log(monthlyChartData)}
-      <Line data={chartData} options={chartOptions} />
+      <Line key={JSON.stringify(chartData)} data={chartData} options={chartOptions} ref={chartRef} />
     </div>
   );
 };

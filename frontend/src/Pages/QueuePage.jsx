@@ -19,6 +19,7 @@ function QueuePage() {
   const [queuelength, setQueueLength] = useState(0);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const [queueStatus, setQueueStatus] = useState("open");
 
   const getQueue = async () => {
     try {
@@ -31,6 +32,7 @@ function QueuePage() {
       setCurrentToken(res.data.queue.currentToken);
       setPatientInqueue(res.data.isPresent);
       setQueueLength(res.data.queue.patients.length);
+      setQueueStatus(res.data.queue.status);
 
       if (res.data.isPresent !== false) {
         setToken(res.data.isPresent.tokenNumber);
@@ -87,6 +89,7 @@ const fetchSuggestions = async () => {
       newSocket.disconnect();
     };
   }, []);
+  console.log(queueStatus);
 
   const submitandEnterQueue = async () => {
     try {
@@ -135,12 +138,12 @@ const fetchSuggestions = async () => {
                 </div>
               )}
             </div>
-            <div onClick={patientInqueue === false || !(token > 0) ? enterQueue : undefined} className="max-w-[250px] flex justify-center mt-2">
-              <Button bgColor="bg-primary">{patientInqueue === false ? "Enter queue" : "You are already in queue"}</Button>
+            <div onClick={patientInqueue === false && queueStatus=="open" ? enterQueue : undefined} className="max-w-[250px] flex justify-center mt-2">
+              <Button bgColor="bg-primary">{patientInqueue === false ? queueStatus=="open"? "Enter queue":"Clinic is closed" : "You are already in queue"}</Button>
             </div>
           </div>
 
-          <div className="p-8">
+          {/* <div className="p-8">
             {suggestions!=undefined && suggestions.length > 0 ? <p className="text-2xl font-bold font-inter">Health tips for you</p> : " "}
 
             {suggestions !=undefined && suggestions.length > 0 ? (
@@ -154,7 +157,7 @@ const fetchSuggestions = async () => {
                 </ul>
               </div>
             ) : null}
-          </div>
+          </div> */}
         </div>
       )}
     </div>
