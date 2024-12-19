@@ -126,11 +126,11 @@ function AdminPage() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-bold">Patient flow</h2>
-                <MonthlyChart monthlyData={monthlyPatientFlow} />
+                {/* <MonthlyChart monthlyData={monthlyPatientFlow} /> */}
               </div>
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-lg font-semibold">Most common symtomps in last 7 days</h2>
-                <SymptomsChart clinicId={id} sortedSymptoms={sortedSymptoms} />
+                {/* <SymptomsChart clinicId={id} sortedSymptoms={sortedSymptoms} /> */}
               </div>
             </div>
 
