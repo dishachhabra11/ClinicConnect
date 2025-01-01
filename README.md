@@ -1,2 +1,2 @@
 ﻿# ClinicConnect
- DEPLOYMENT LINK:-https://clinicconnect-2.onrender.com/
+ Deployment Link:-https://clinicconnect-2.onrender.com/
